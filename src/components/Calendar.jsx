@@ -1,10 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import moment from 'moment';
 import { map, forEach, range, isEmpty } from 'lodash';
+import { withTheme } from '@material-ui/core/styles';
+import calendarStyles from '../styles/calendar';
 
 const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-class Layout extends Component {
+class Calendar extends Component {
+  // state = {
+    
+  // }
+
   get dates() {
     const date = moment();
     const currentYear = moment().year();
@@ -54,7 +60,7 @@ class Layout extends Component {
 
     while(i <= daysInMonth) {
       if (moment(`${i}-${currentMonth}-${currentYear}`, 'DD-MM-YYYY').isoWeekday() !== 7) {
-        arr_2.push(<div>{i}</div>)
+        arr_2.push(this.renderCalendarCell(i))
       } else if ((moment(`${i}-${currentMonth}-${currentYear}`, 'DD-MM-YYYY').isoWeekday() === 7)) {
         arr_2.push(<div>{i}</div>);
         resultArr.push(rowDiv);
@@ -75,18 +81,20 @@ class Layout extends Component {
   }
 
   renderCalendarCell = (date) => {
+    const { classes } = this.props;
     const dates = this.dates;
 
-    const cellClasses = `${classes.cell} ${dates.currentDay === date ? classes.current: ''}`;
+    // const cellClasses = `${classes.cell} ${dates.currentDay === date ? classes.current: ''}`;
 
     return (
-      <div className={cellClasses}>${date}</div>
+      <div className={classes.cell}>${date}</div>
     );
   }
 
   render() {
     const dates = this.dates;
     console.log('dates', dates);
+    console.log('this.state', this.state);
 
     return (
       <div>
@@ -99,4 +107,4 @@ class Layout extends Component {
   }
 }
 
-export default Layout;
+export default withTheme(calendarStyles)(Calendar);

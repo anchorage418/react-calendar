@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import calendarStyles from '../styles/calendar';
 
 const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const WEEK_TOTAL = 7;
 
 class Calendar extends Component {
   state = {
@@ -42,6 +43,7 @@ class Calendar extends Component {
     const currentDay = date.date();
     const currentWeekDay = date.isoWeekday();
     const startDay = date.startOf('month').isoWeekday();
+    const endDay = date.endOf('month').isoWeekday();
     const daysInMonth = date.endOf('month').date(); 
 
     return {
@@ -51,11 +53,13 @@ class Calendar extends Component {
       currentDay,
       currentWeekDay,
       startDay,
+      endDay,
       daysInMonth,
     }; 
   }
 
   renderCalendarHeader = () => {
+    const { classes } = this.props;
     const { date, currentYear } = this.dates;
     const formatedMonth = date.format('MMMM');
 
@@ -64,10 +68,12 @@ class Calendar extends Component {
         <div>
           <h4>{`${formatedMonth} ${currentYear}`}</h4>
         </div>
-        <ul>
+        <ul className={classes.week_day__list}>
           {map(WEEK_DAYS, (day) => {
               return (
-                <li>{day}</li>
+                <li className={classes.week_day__item}>
+                  {day}
+                </li>
               )
             })}
         </ul>
@@ -76,24 +82,39 @@ class Calendar extends Component {
   }
   
   renderCalendarBody = () => {
-    const { date, daysInMonth, currentYear, currentMonth } = this.dates;
-    const { classes, format } = this.props;
+    const { date, daysInMonth, startDay, endDay } = this.dates;
+    const { classes } = this.props;
+
+    const pastDays = startDay !== 1 ? WEEK_TOTAL - startDay : null;
+    const lastDays = endDay !== 7 ? WEEK_TOTAL - endDay : null;
 
     let resultArr = [];
     let cellsArr = [];
     let i = 1;
+    let j = 1;
     let rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
 
+    if (pastDays) {
+      while (j <= pastDays) {
+        cellsArr.push(this.renderCalendarCell('', true));
+        j++;
+      }
+      j = 1;
+    }
     while(i <= daysInMonth) {
-      if (date.date(i).isoWeekday() !== 7) {
+      if (date.date(i).isoWeekday() !== WEEK_TOTAL) {
         cellsArr.push(this.renderCalendarCell(i))
-      } else if (date.date(i).isoWeekday() === 7) {
+      } else if (date.date(i).isoWeekday() === WEEK_TOTAL) {
         cellsArr.push(this.renderCalendarCell(i));
         resultArr.push(rowDiv);
         cellsArr = [];
         rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
       }
       if (i === daysInMonth && !isEmpty(cellsArr)) {
+        while (j <= lastDays) {
+          cellsArr.push(this.renderCalendarCell('', true));
+          j++;
+        }
         resultArr.push(rowDiv);
         cellsArr = [];
         rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
@@ -106,13 +127,15 @@ class Calendar extends Component {
     );
   }
 
-  renderCalendarCell = (date) => {
+  renderCalendarCell = (date, disabled = false) => {
     const { classes } = this.props;
-    const dates = this.dates;
+    const { currentDay } = this.dates;
 
-    const currenDayClass = dates.currentDay === date ? classes.current_day: '';
+    const currenDayClass = currentDay === date ? classes.current_day : '';
+    const disabledDayClass = disabled ? classes.disabled_day : '';
+    const pastDayClass = date && date < currentDay ? classes.past_day : '';
 
-    const cellClasses = `${classes.cell} ${currenDayClass}`;
+    const cellClasses = `${classes.cell} ${currenDayClass} ${disabledDayClass} ${pastDayClass}`;
 
     return (
       <div className={cellClasses}>{date}</div>

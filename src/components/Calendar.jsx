@@ -1,24 +1,48 @@
 import React, { Component, Fragment } from 'react';
 import moment from 'moment';
 import { map, forEach, range, isEmpty } from 'lodash';
-import { withTheme } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import calendarStyles from '../styles/calendar';
 
 const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 class Calendar extends Component {
-  // state = {
-    
-  // }
+  state = {
+    value: moment(),  
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+    const { value, format } = this.props;
+    if (value) {
+      this.setState({
+        value: moment(value, format),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevSate) {
+    // console.log('componentDidUpdate', prevSate);
+    // console.log('componentDidUpdate', this.state);
+    // const { value, format } = this.props;
+    // if (value && prevSate.value.isSame(value)) {
+    //   console.log('new POROP');
+    //   this.setState({
+    //     value: moment(value, format),
+    //   });
+    // }
+  }
 
   get dates() {
-    const date = moment();
-    const currentYear = moment().year();
-    const currentMonth = moment().month() + 1;
-    const currentDay = moment().date();
-    const currentWeekDay = moment().isoWeekday();
-    const startDay = moment().startOf('month').isoWeekday();
-    const daysInMonth = moment().endOf('month').date(); 
+    const { value, format } = this.state;
+
+    const date = moment(value, format);
+    const currentYear = date.year();
+    const currentMonth = date.month() + 1;
+    const currentDay = date.date();
+    const currentWeekDay = date.isoWeekday();
+    const startDay = date.startOf('month').isoWeekday();
+    const daysInMonth = date.endOf('month').date(); 
 
     return {
       date,
@@ -31,13 +55,14 @@ class Calendar extends Component {
     }; 
   }
 
-  renderCalendarHeader = (year) => {
-    const formatedMonth = moment().format('MMMM');
+  renderCalendarHeader = () => {
+    const { date, currentYear } = this.dates;
+    const formatedMonth = date.format('MMMM');
 
     return (
       <Fragment>
         <div>
-          <h4>{`${formatedMonth} ${year}`}</h4>
+          <h4>{`${formatedMonth} ${currentYear}`}</h4>
         </div>
         <ul>
           {map(WEEK_DAYS, (day) => {
@@ -50,27 +75,28 @@ class Calendar extends Component {
     );
   }
   
-  renderCalendarBody = (daysInMonth, currentDay, currentMonth, currentYear) => {
-    // const daysInMonthArr = range(1, daysInMonth + 1);
+  renderCalendarBody = () => {
+    const { date, daysInMonth, currentYear, currentMonth } = this.dates;
+    const { classes, format } = this.props;
 
     let resultArr = [];
-    let arr_2 = [];
+    let cellsArr = [];
     let i = 1;
-    let rowDiv = <div>{arr_2}</div>;
+    let rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
 
     while(i <= daysInMonth) {
-      if (moment(`${i}-${currentMonth}-${currentYear}`, 'DD-MM-YYYY').isoWeekday() !== 7) {
-        arr_2.push(this.renderCalendarCell(i))
-      } else if ((moment(`${i}-${currentMonth}-${currentYear}`, 'DD-MM-YYYY').isoWeekday() === 7)) {
-        arr_2.push(<div>{i}</div>);
+      if (date.date(i).isoWeekday() !== 7) {
+        cellsArr.push(this.renderCalendarCell(i))
+      } else if (date.date(i).isoWeekday() === 7) {
+        cellsArr.push(this.renderCalendarCell(i));
         resultArr.push(rowDiv);
-        arr_2 = [];
-        rowDiv = <div>{arr_2}</div>;
+        cellsArr = [];
+        rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
       }
-      if (i === daysInMonth && !isEmpty(arr_2)) {
+      if (i === daysInMonth && !isEmpty(cellsArr)) {
         resultArr.push(rowDiv);
-        arr_2 = [];
-        rowDiv = <div>{arr_2}</div>;
+        cellsArr = [];
+        rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
       }
       i++;
     }
@@ -84,10 +110,12 @@ class Calendar extends Component {
     const { classes } = this.props;
     const dates = this.dates;
 
-    // const cellClasses = `${classes.cell} ${dates.currentDay === date ? classes.current: ''}`;
+    const currenDayClass = dates.currentDay === date ? classes.current_day: '';
+
+    const cellClasses = `${classes.cell} ${currenDayClass}`;
 
     return (
-      <div className={classes.cell}>${date}</div>
+      <div className={cellClasses}>{date}</div>
     );
   }
 
@@ -95,16 +123,17 @@ class Calendar extends Component {
     const dates = this.dates;
     console.log('dates', dates);
     console.log('this.state', this.state);
+    console.log('this.props', this.props);
 
     return (
       <div>
         <div>
-          {this.renderCalendarHeader(dates.currentYear)}
-          {this.renderCalendarBody(dates.daysInMonth, dates.currentDay, dates.currentMonth, dates.currentYear)}
+          {this.renderCalendarHeader()}
+          {this.renderCalendarBody()}
         </div>
       </div>
     );
   }
 }
 
-export default withTheme(calendarStyles)(Calendar);
+export default withStyles(calendarStyles)(Calendar);

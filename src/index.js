@@ -6,9 +6,11 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import theme from './styles/theme';
 
 ReactDOM.render(
-  <MuiThemeProvider theme={theme}>
-    <App />
-  </MuiThemeProvider>, 
+  <div>
+    <MuiThemeProvider theme={theme}>
+      <App />
+    </MuiThemeProvider>
+  </div>,
 document.getElementById('root')
 );
 

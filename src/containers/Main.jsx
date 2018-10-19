@@ -10,7 +10,7 @@ class Main extends Component {
       <div>
         <div>
           <Calendar 
-            value={'20-11-2018'}
+            value={''}
             format={FORMAT}
           />
         </div>

@@ -1,6 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { map, forEach, range, isEmpty } from 'lodash';
+import { Button, Icon } from '@material-ui/core';
+// import NavigateBefore from '@material-ui/icons/NavigateBefore';
+// import NavigateNext from '@material-ui/icons/NavigateNext';
+// import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import { withStyles } from '@material-ui/core/styles';
 import calendarStyles from '../styles/calendar';
 
@@ -10,6 +15,7 @@ const WEEK_TOTAL = 7;
 class Calendar extends Component {
   state = {
     value: moment(),  
+    step: 0,
   }
 
   componentDidMount() {
@@ -58,6 +64,26 @@ class Calendar extends Component {
     }; 
   }
 
+  prevHandler = () => {
+    let { step, value } = this.state;
+    
+    if (step > 0) {
+      this.setState({
+        step: step - 1,
+        value: value.subtract(1, 'M')
+      });
+    }
+  }
+
+  nextHandler = () => {
+    let { step, value } = this.state;
+
+    this.setState({
+      step: step + 1, 
+      value: value.add(1, 'M')
+    });
+  }
+
   renderCalendarHeader = () => {
     const { classes } = this.props;
     const { date, currentYear } = this.dates;
@@ -67,6 +93,16 @@ class Calendar extends Component {
       <Fragment>
         <div>
           <h4>{`${formatedMonth} ${currentYear}`}</h4>
+        </div>
+        <div>
+          <Button onClick={this.prevHandler} variant="contained" color="primary">
+            Prev
+            {/* <Icon>AccessAlarmIcon</Icon> */}
+          </Button>
+          <Button onClick={this.nextHandler} variant="contained" color="primary">
+            Next
+            {/* <Icon>AccessAlarmIcon</Icon> */}
+          </Button>
         </div>
         <ul className={classes.week_day__list}>
           {map(WEEK_DAYS, (day) => {
@@ -85,7 +121,7 @@ class Calendar extends Component {
     const { date, daysInMonth, startDay, endDay } = this.dates;
     const { classes } = this.props;
 
-    const pastDays = startDay !== 1 ? WEEK_TOTAL - startDay : null;
+    const pastDays = startDay !== 1 ? WEEK_TOTAL - ((WEEK_TOTAL + 1) - startDay) : null;
     const lastDays = endDay !== 7 ? WEEK_TOTAL - endDay : null;
 
     let resultArr = [];
@@ -128,12 +164,13 @@ class Calendar extends Component {
   }
 
   renderCalendarCell = (date, disabled = false) => {
+    const { step } = this.state; 
     const { classes } = this.props;
     const { currentDay } = this.dates;
 
-    const currenDayClass = currentDay === date ? classes.current_day : '';
+    const currenDayClass = step === 0 && currentDay === date ? classes.current_day : '';
     const disabledDayClass = disabled ? classes.disabled_day : '';
-    const pastDayClass = date && date < currentDay ? classes.past_day : '';
+    const pastDayClass = step === 0 && date && date < currentDay ? classes.past_day : '';
 
     const cellClasses = `${classes.cell} ${currenDayClass} ${disabledDayClass} ${pastDayClass}`;
 
@@ -143,6 +180,7 @@ class Calendar extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     const dates = this.dates;
     console.log('dates', dates);
     console.log('this.state', this.state);
@@ -151,12 +189,21 @@ class Calendar extends Component {
     return (
       <div>
         <div>
-          {this.renderCalendarHeader()}
-          {this.renderCalendarBody()}
+          <div className={classes.calendar_header}>
+            {this.renderCalendarHeader()}
+          </div>
+          <div className={classes.calendar_body}>
+            {this.renderCalendarBody()}
+          </div>
         </div>
       </div>
     );
   }
+}
+
+Calendar.PropTypes = {
+  value: PropTypes.string,
+  format: PropTypes.string.isRequired,   
 }
 
 export default withStyles(calendarStyles)(Calendar);

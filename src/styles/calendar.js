@@ -1,4 +1,10 @@
 export default () => ({
+  calendar_header: {
+
+  },
+  calendar_body: {
+    // width: '500px',
+  },
   cell: {
     width: '30px',
     height: '30px',

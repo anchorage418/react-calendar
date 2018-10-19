@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { map, forEach, range, isEmpty } from 'lodash';
+import { map, isEmpty } from 'lodash';
 import { Button, Icon } from '@material-ui/core';
 // import NavigateBefore from '@material-ui/icons/NavigateBefore';
 // import NavigateNext from '@material-ui/icons/NavigateNext';
@@ -19,7 +19,7 @@ class Calendar extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
+    console.log('CALENDAR componentDidMount');
     const { value, format } = this.props;
     if (value) {
       this.setState({
@@ -105,9 +105,9 @@ class Calendar extends Component {
           </Button>
         </div>
         <ul className={classes.week_day__list}>
-          {map(WEEK_DAYS, (day) => {
+          {map(WEEK_DAYS, (day, index) => {
               return (
-                <li className={classes.week_day__item}>
+                <li className={classes.week_day__item} key={`week_day__item_${index}`}>
                   {day}
                 </li>
               )
@@ -128,11 +128,11 @@ class Calendar extends Component {
     let cellsArr = [];
     let i = 1;
     let j = 1;
-    let rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
+    let rowDiv = <div className={classes.cells_row} key={`cells_row__${i}`}>{cellsArr}</div>;
 
     if (pastDays) {
       while (j <= pastDays) {
-        cellsArr.push(this.renderCalendarCell('', true));
+        cellsArr.push(this.renderCalendarCell(j, true));
         j++;
       }
       j = 1;
@@ -144,16 +144,16 @@ class Calendar extends Component {
         cellsArr.push(this.renderCalendarCell(i));
         resultArr.push(rowDiv);
         cellsArr = [];
-        rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
+        rowDiv = <div className={classes.cells_row} key={`cells_row__${i}`}>{cellsArr}</div>;
       }
       if (i === daysInMonth && !isEmpty(cellsArr)) {
         while (j <= lastDays) {
-          cellsArr.push(this.renderCalendarCell('', true));
+          cellsArr.push(this.renderCalendarCell(j + i, true));
           j++;
         }
         resultArr.push(rowDiv);
-        cellsArr = [];
-        rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
+        // cellsArr = [];
+        // rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
       }
       i++;
     }
@@ -168,14 +168,17 @@ class Calendar extends Component {
     const { classes } = this.props;
     const { currentDay } = this.dates;
 
-    const currenDayClass = step === 0 && currentDay === date ? classes.current_day : '';
+    const day = disabled ? '' : date;
+    const itemKey = disabled ? `disabled_cell__${date}` : `cell__${date}`;
+
+    const currenDayClass = step === 0 && !disabled && currentDay === date ? classes.current_day : '';
     const disabledDayClass = disabled ? classes.disabled_day : '';
-    const pastDayClass = step === 0 && date && date < currentDay ? classes.past_day : '';
+    const pastDayClass = step === 0 && !disabled && date < currentDay ? classes.past_day : '';
 
     const cellClasses = `${classes.cell} ${currenDayClass} ${disabledDayClass} ${pastDayClass}`;
 
     return (
-      <div className={cellClasses}>{date}</div>
+      <div className={cellClasses} key={itemKey}>{day}</div>
     );
   }
 
@@ -201,7 +204,7 @@ class Calendar extends Component {
   }
 }
 
-Calendar.PropTypes = {
+Calendar.propTypes = {
   value: PropTypes.string,
   format: PropTypes.string.isRequired,   
 }

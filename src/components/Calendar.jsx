@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { map, isEmpty } from 'lodash';
+import { map, isEmpty, isEqual } from 'lodash';
 import { Button, Icon } from '@material-ui/core';
 // import NavigateBefore from '@material-ui/icons/NavigateBefore';
 // import NavigateNext from '@material-ui/icons/NavigateNext';
@@ -20,7 +20,7 @@ class Calendar extends Component {
 
   componentDidMount() {
     console.log('CALENDAR componentDidMount');
-    const { value, format } = this.props;
+    const { value, format, dbIsConnected, getEvents } = this.props;
     if (value) {
       this.setState({
         value: moment(value, format),
@@ -28,16 +28,26 @@ class Calendar extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevSate) {
+  componentDidUpdate(prevProps, prevState) {
     // console.log('componentDidUpdate', prevSate);
     // console.log('componentDidUpdate', this.state);
-    // const { value, format } = this.props;
+    const { value, format, dbIsConnected, getEvents } = this.props;
+    const { step } = this.state;
+    const { currentMonth, currentYear, daysInMonth } = this.dates;
+    // "YYYY-MM-DD HH:MM:SS" format is required
+    const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
+    const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
     // if (value && prevSate.value.isSame(value)) {
     //   console.log('new POROP');
     //   this.setState({
     //     value: moment(value, format),
     //   });
     // }
+
+    if ((prevProps.dbIsConnected !== dbIsConnected && dbIsConnected)
+        || (prevState.step !== step)) {
+      getEvents(startDate, endDate);
+    }
   }
 
   get dates() {
@@ -65,23 +75,35 @@ class Calendar extends Component {
   }
 
   prevHandler = () => {
+    const { getEvents } = this.props;
     let { step, value } = this.state;
-    
+    const { currentMonth, currentYear, daysInMonth } = this.dates;
+
     if (step > 0) {
       this.setState({
         step: step - 1,
         value: value.subtract(1, 'M')
       });
+
+      // const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
+      // const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
+      // getEvents(startDate, endDate);
     }
   }
 
   nextHandler = () => {
+    const { getEvents } = this.props;
     let { step, value } = this.state;
+    const { currentMonth, currentYear, daysInMonth } = this.dates;
 
     this.setState({
       step: step + 1, 
       value: value.add(1, 'M')
     });
+
+    // const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
+    // const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
+    // getEvents(startDate, endDate);
   }
 
   renderCalendarHeader = () => {
@@ -165,9 +187,10 @@ class Calendar extends Component {
 
   renderCalendarCell = (date, disabled = false) => {
     const { step } = this.state; 
-    const { classes } = this.props;
+    const { classes, events } = this.props;
     const { currentDay } = this.dates;
-
+// console.log('EVENTS', events);
+// console.log('date', events && events.length);
     const day = disabled ? '' : date;
     const itemKey = disabled ? `disabled_cell__${date}` : `cell__${date}`;
 
@@ -178,16 +201,23 @@ class Calendar extends Component {
     const cellClasses = `${classes.cell} ${currenDayClass} ${disabledDayClass} ${pastDayClass}`;
 
     return (
-      <div className={cellClasses} key={itemKey}>{day}</div>
+      <div className={cellClasses} key={itemKey}>
+        {day}
+        {!disabled && events && events[date] &&
+          <div className={classes.events_tooltip}>
+            {date}
+          </div>
+        }
+      </div>
     );
   }
 
   render() {
     const { classes } = this.props;
-    const dates = this.dates;
-    console.log('dates', dates);
-    console.log('this.state', this.state);
-    console.log('this.props', this.props);
+    // const dates = this.dates;
+    // console.log('dates', dates);
+    // console.log('this.state', this.state);
+    // console.log('this.props', this.props);
 
     return (
       <div>

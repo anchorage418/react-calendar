@@ -1,9 +1,12 @@
 import {
-  connectDb,
+  createDb,
+  getEvents,
 } from './database';
 
-export const CONNECT_DB = 'CONNECT_DB';
+export const CREATE_DB = 'CREATE_DB';
+export const GET_EVENTS = 'GET_EVENTS';
 
 export {
-  connectDb,
+  createDb,
+  getEvents,
 }

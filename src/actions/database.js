@@ -1,11 +1,25 @@
-import { CONNECT_DB } from './index';
+import { 
+  CREATE_DB,
+  GET_EVENTS,
+} from './index';
 
-function connectDb() {
+function createDb() {
   return {
-    type: CONNECT_DB,
+    type: CREATE_DB,
+  };
+}
+
+function getEvents(startDate, endDate) {
+  return {
+    type: GET_EVENTS,
+    payload: {
+      startDate,
+      endDate,
+    }
   };
 }
 
 export {
-  connectDb,
+  createDb,
+  getEvents,
 };

@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const initDB = () => {
   if (window && window.indexedDB) {
     const request = window.indexedDB.open('calendarDB', 3);
@@ -31,28 +33,63 @@ const initDB = () => {
 }
 
 const getDataFromDB = (startDate, endDate, callback) => {
-  const db = openDatabase('calendarDB', '1.0', 'calendar database', 2*1024*1024);
-  let events = [];
-  db.transaction(function (tx) {
-    tx.executeSql(`SELECT rowid, event_title, event_desc, event_start, event_end FROM events 
-    WHERE event_start BETWEEN '${startDate}' AND '${endDate}' ORDER BY event_start`, [], (tx, result) => {
-      const tableRows = result.rows;
-      forEach(tableRows, (val) => {
-        const day = moment(val.event_start, 'YYYY-MM-DD HH:mm:ss').date();
-        if (events[day]) {
-          events[day].push(val);
+  const startDateMoment = moment(startDate, 'YYYY-MM-DD HH:mm:ss');
+  const endDateMoment = moment(endDate, 'YYYY-MM-DD HH:mm:ss');
+
+  if (window && window.indexedDB) {
+    const DBOpenRequest = window.indexedDB.open('calendarDB', 3);
+    // let db;
+    DBOpenRequest.onsuccess = function(event) {
+      const db = DBOpenRequest.result;
+      const transaction = db.transaction('events', 'readonly');
+      const objectStore = transaction.objectStore('events');
+  
+      let matchedEvents = [];
+
+      const eventStartIndex = objectStore.index('event_start');
+      eventStartIndex.openCursor().onsuccess = function(event) {
+        const cursor = event.target.result;
+        if (cursor) {
+          const { event_start, event_end } = cursor.value;
+          const eventStartMoment = moment(event_start, 'YYYY-MM-DD HH:mm:ss');
+          const eventEndMoment = moment(event_end, 'YYYY-MM-DD HH:mm:ss');
+          if (moment(eventStartMoment).isSameOrAfter(startDateMoment) && moment(eventEndMoment).isSameOrBefore(endDateMoment)) {
+            matchedEvents.push(cursor.value);
+          }
+          cursor.continue();
         } else {
-          events[day] = [val];
+          console.log('matchedEvents 1', matchedEvents);
+          callback(matchedEvents);
         }
-      });
-      // console.log('utils events', events);
-      callback(events);
-    }, null);
-  });
+      }
+
+      console.log('matchedEvents 2', matchedEvents);
+    };
+  }
+
+
+  // const db = openDatabase('calendarDB', '1.0', 'calendar database', 2*1024*1024);
+  // let events = [];
+  // db.transaction(function (tx) {
+  //   tx.executeSql(`SELECT rowid, event_title, event_desc, event_start, event_end FROM events 
+  //   WHERE event_start BETWEEN '${startDate}' AND '${endDate}' ORDER BY event_start`, [], (tx, result) => {
+  //     const tableRows = result.rows;
+  //     forEach(tableRows, (val) => {
+  //       const day = moment(val.event_start, 'YYYY-MM-DD HH:mm:ss').date();
+  //       if (events[day]) {
+  //         events[day].push(val);
+  //       } else {
+  //         events[day] = [val];
+  //       }
+  //     });
+  //     // console.log('utils events', events);
+  //     callback(events);
+  //   }, null);
+  // });
 }
 
 
 export {
   initDB,
-  // getDataFromDB,
+  getDataFromDB,
 }

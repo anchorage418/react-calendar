@@ -5,7 +5,7 @@ import {
 } from '../actions/index';
 import {
   initDB,
-  // getDataFromDB,
+  getDataFromDB,
 } from '../utils/utilsIndexedDB';
 
 const initalState = {
@@ -18,11 +18,11 @@ export default (state = initalState, action) => {
     case CREATE_DB:
       initDB();
       return {...state, db_created: true};
-    // case GET_EVENTS:
-    //   const { startDate, endDate } = action.payload;
-    //   const data =  getDataFromDB(startDate, endDate, result => result);
-    //   console.log('reducer result', data);
-    //   return {...state, events: data};
+    case GET_EVENTS:
+      const { startDate, endDate } = action.payload;
+      const data =  getDataFromDB(startDate, endDate, result => result);
+      console.log('reducer result', data);
+      // return {...state, events: data};
     default:
       return state;
   }

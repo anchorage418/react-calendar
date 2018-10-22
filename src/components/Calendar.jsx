@@ -44,10 +44,10 @@ class Calendar extends Component {
     //   });
     // }
 
-    if ((prevProps.dbIsConnected !== dbIsConnected && dbIsConnected)
-        || (prevState.step !== step)) {
-      getEvents(startDate, endDate);
-    }
+    // if ((prevProps.dbIsConnected !== dbIsConnected && dbIsConnected)
+    //     || (prevState.step !== step)) {
+    //   getEvents(startDate, endDate);
+    // }
   }
 
   get dates() {

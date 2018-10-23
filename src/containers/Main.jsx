@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { isEmpty } from 'lodash';
 import Calendar from '../components/Calendar';
-import * as actions from '../actions'
+import * as actions from '../actions';
 
-const FORMAT = 'DD-MM-YYYY'
+const FORMAT = 'DD-MM-YYYY';
 
 class Main extends Component {
   componentDidMount() {
@@ -13,9 +12,13 @@ class Main extends Component {
     createDb();
     // getEvents();
   }
+
+  // modalChangeHandler = (se) => {
+  //   const { toggleModal } = this.porps;
+  // }
   
   render() {
-    const { getEvents, dbIsConnected, events } = this.props;
+    const { getEvents, dbIsConnected, events, toggleModal, selectDay } = this.props;
     
     return (
       <div>
@@ -25,6 +28,8 @@ class Main extends Component {
             format={FORMAT}
             events={events}
             getEvents={getEvents}
+            toggleModal={toggleModal}
+            selectDay={selectDay}
             dbIsConnected={dbIsConnected}
           />
         </div>
@@ -48,6 +53,14 @@ function mapDispatchToProps(dispatch) {
     },
     getEvents: (startDate, endDate) => {
       dispatch(actions.getEvents(startDate, endDate));
+    },
+    selectDay: (day) => {
+      if (day) {
+        dispatch(actions.selectDay(day));
+      }
+    },
+    toggleModal: (settings) => {
+      dispatch(actions.toggleModal(settings));
     },
   }
 };

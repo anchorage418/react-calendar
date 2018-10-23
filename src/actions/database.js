@@ -1,6 +1,7 @@
 import { 
   CREATE_DB,
   GET_EVENTS,
+  SELECTED_DAY,
 } from './index';
 
 function createDb() {
@@ -19,7 +20,15 @@ function getEvents(startDate, endDate) {
   };
 }
 
+function selectDay(day) {
+  return {
+    type: SELECTED_DAY,
+    day,
+  }
+}
+
 export {
   createDb,
   getEvents,
+  selectDay,
 };

@@ -75,35 +75,25 @@ class Calendar extends Component {
   }
 
   prevHandler = () => {
-    const { getEvents } = this.props;
+    // const { getEvents } = this.props;
     let { step, value } = this.state;
-    const { currentMonth, currentYear, daysInMonth } = this.dates;
 
     if (step > 0) {
       this.setState({
         step: step - 1,
         value: value.subtract(1, 'M')
       });
-
-      // const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
-      // const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
-      // getEvents(startDate, endDate);
     }
   }
 
   nextHandler = () => {
-    const { getEvents } = this.props;
+    // const { getEvents } = this.props;
     let { step, value } = this.state;
-    const { currentMonth, currentYear, daysInMonth } = this.dates;
 
     this.setState({
       step: step + 1, 
       value: value.add(1, 'M')
     });
-
-    // const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
-    // const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
-    // getEvents(startDate, endDate);
   }
 
   renderCalendarHeader = () => {
@@ -174,8 +164,6 @@ class Calendar extends Component {
           j++;
         }
         resultArr.push(rowDiv);
-        // cellsArr = [];
-        // rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
       }
       i++;
     }
@@ -185,12 +173,19 @@ class Calendar extends Component {
     );
   }
 
+  eventTooltipHandler = (day) => {
+    const { selectDay, events, toggleModal } = this.props;
+    const settings = {
+      totalDayEvents: true,
+    };
+    selectDay(events[day]);
+    toggleModal(settings);
+  }
+
   renderCalendarCell = (date, disabled = false) => {
     const { step } = this.state; 
     const { classes, events } = this.props;
     const { currentDay } = this.dates;
-// console.log('EVENTS', events);
-// console.log('date', events && events.length);
     const day = disabled ? '' : date;
     const itemKey = disabled ? `disabled_cell__${date}` : `cell__${date}`;
 
@@ -204,8 +199,8 @@ class Calendar extends Component {
       <div className={cellClasses} key={itemKey}>
         {day}
         {!disabled && events && events[date] &&
-          <div className={classes.events_tooltip}>
-            {date}
+          <div className={classes.events_tooltip} onClick={() => this.eventTooltipHandler(date)}>
+            {events[date].length}
           </div>
         }
       </div>
@@ -237,6 +232,9 @@ class Calendar extends Component {
 Calendar.propTypes = {
   value: PropTypes.string,
   format: PropTypes.string.isRequired,   
+  getEvents: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  selectDay: PropTypes.func.isRequired,
 }
 
 export default withStyles(calendarStyles)(Calendar);

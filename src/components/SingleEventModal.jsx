@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Modal from './Modal';
+import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { map, isEqual } from 'lodash';
 import singleEventModalStyles from '../styles/totalEventsModal';
@@ -9,6 +10,14 @@ class SingleEventModal extends Component {
     const { toggleModal } = this.props;
     const settings = {
       singleEvent: false,
+    };
+    toggleModal(settings);
+  }
+
+  editEventHandler = () => {
+    const { toggleModal } = this.props;
+    const settings = {
+      editEvent: true,
     };
     toggleModal(settings);
   }
@@ -26,6 +35,12 @@ class SingleEventModal extends Component {
           <div className={classes.modal__body}>
             {event_desc}
           </div>
+          <Button onClick={this.editEventHandler}>
+            Edit
+          </Button>
+          <Button>
+            Delete
+          </Button>
         </div>
       </Modal>
     );

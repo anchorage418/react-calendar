@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import Button from '@material-ui/core/Button';
 import Calendar from '../components/Calendar';
 import TotalEventsDayModal from '../components/TotalEventsDayModal';
 import SingleEventModal from '../components/SingleEventModal';
+import EditEventModal from '../components/EditEventModal';
 import * as actions from '../actions';
 
 const FORMAT = 'DD-MM-YYYY';
@@ -15,12 +17,20 @@ class Main extends Component {
     // getEvents();
   }
 
-  // modalChangeHandler = (se) => {
-  //   const { toggleModal } = this.porps;
-  // }
+  addEventHandler = () => {
+    const { toggleModal } = this.props;
+    const settings = {
+      addEvent: true,
+    };
+    toggleModal(settings);
+  }
   
   render() {
-    const { getEvents, dbIsConnected, events, toggleModal, selectDay, modalState, selectedDay, selectEvent, selectedEvent } = this.props;
+    const { getEvents, dbIsConnected, events, 
+            toggleModal, selectDay, modalState, 
+            selectedDay, selectEvent, selectedEvent, 
+            addEvent, monthTimeSpan, updateEvent,
+          } = this.props;
     
     return (
       <div>
@@ -35,6 +45,11 @@ class Main extends Component {
             dbIsConnected={dbIsConnected}
             selectedDay={selectedDay}
           />
+          <div>
+            <Button color="primary" onClick={this.addEventHandler}>
+              Add event
+            </Button>
+          </div>
         </div>
         {modalState && modalState.totalDayEvents && 
         <TotalEventsDayModal
@@ -43,13 +58,25 @@ class Main extends Component {
           selectedDay={selectedDay}
           selectEvent={selectEvent}
           selectedEvent={selectedEvent}
+          addEventHandler={this.addEventHandler}
         />}
         {modalState && modalState.singleEvent && 
         <SingleEventModal
           open={modalState.singleEvent}
           toggleModal={toggleModal}
-          selectedDay={selectedDay}
-          selectEvent={selectEvent}
+          // selectedDay={selectedDay}
+          // selectEvent={selectEvent}
+          selectedEvent={selectedEvent}
+        />}
+        {
+        <EditEventModal 
+          toggleModal={toggleModal}
+          editModal={modalState.editEvent}
+          addModal={modalState.addEvent}
+          addEvent={addEvent}
+          updateEvent={updateEvent}
+          getEvents={getEvents}
+          monthTimeSpan={monthTimeSpan}
           selectedEvent={selectedEvent}
         />}
       </div>
@@ -63,7 +90,8 @@ const mapStateToProps = (state) => {
     dbIsConnected: webDatabase.db_created,
     selectedDay: webDatabase.selectedDay,
     selectedEvent: webDatabase.selectedEvent,
-    events: webDatabase.events,  
+    events: webDatabase.events,
+    monthTimeSpan: webDatabase.currentMonthTimeSpan,  
     modalState,
   };
 };
@@ -73,8 +101,14 @@ function mapDispatchToProps(dispatch) {
     createDb: () => {
       dispatch(actions.createDb());
     },
-    getEvents: (startDate, endDate) => {
-      dispatch(actions.getEvents(startDate, endDate));
+    getEvents: (monthPeriod) => {
+      dispatch(actions.getEvents(monthPeriod));
+    },
+    addEvent: (event) => {
+      dispatch(actions.addEvent(event));
+    },
+    updateEvent: (event) => {
+      dispatch(actions.updateEvent(event));
     },
     selectDay: (day) => {
       if (day) {

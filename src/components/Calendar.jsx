@@ -31,7 +31,7 @@ class Calendar extends Component {
   componentDidUpdate(prevProps, prevState) {
     // console.log('componentDidUpdate', prevSate);
     // console.log('componentDidUpdate', this.state);
-    const { value, format, dbIsConnected, getEvents } = this.props;
+    const { value, format, dbIsConnected, getEvents, events, selectDay, selectedDay } = this.props;
     const { step } = this.state;
     const { currentMonth, currentYear, daysInMonth } = this.dates;
     // "YYYY-MM-DD HH:MM:SS" format is required
@@ -46,7 +46,12 @@ class Calendar extends Component {
 
     if ((prevProps.dbIsConnected !== dbIsConnected && dbIsConnected)
         || (prevState.step !== step)) {
-      getEvents(startDate, endDate);
+      getEvents({ startDate, endDate });
+    }
+
+    if (!isEmpty(selectedDay) && !isEqual(events, prevProps.events)) {
+      const day = moment(selectedDay[0].event_start).date();
+      selectDay(events[day]);
     }
   }
 

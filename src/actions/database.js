@@ -3,6 +3,8 @@ import {
   GET_EVENTS,
   SELECTED_DAY,
   SELECTED_EVENT,
+  ADD_EVENT,
+  UPDATE_EVENT,
 } from './index';
 
 function createDb() {
@@ -11,13 +13,24 @@ function createDb() {
   };
 }
 
-function getEvents(startDate, endDate) {
+function getEvents(monthPeriod) {
   return {
     type: GET_EVENTS,
-    payload: {
-      startDate,
-      endDate,
-    }
+    monthPeriod,
+  };
+}
+
+function addEvent(event) {
+  return {
+    type: ADD_EVENT,
+    event,
+  };
+}
+
+function updateEvent(event) {
+  return {
+    type: UPDATE_EVENT,
+    event,
   };
 }
 
@@ -40,4 +53,6 @@ export {
   getEvents,
   selectDay,
   selectEvent,
+  addEvent,
+  updateEvent,
 };

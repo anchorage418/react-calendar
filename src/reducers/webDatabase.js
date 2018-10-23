@@ -6,10 +6,14 @@ import {
   GET_EVENTS,
   SELECTED_DAY,
   SELECTED_EVENT,
+  ADD_EVENT,
+  UPDATE_EVENT,
 } from '../actions/index';
 import { 
   initStorage,
   getMonthEvents,
+  addEvent,
+  updateEvent,
 } from '../utils';
 
 const FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -17,6 +21,7 @@ const FORMAT = 'YYYY-MM-DD HH:mm:ss';
 const initalState = {
   db_created: false,
   events: [],
+  currentMonthTimeSpan: {},
   selectedDay: [],
   selectedEvent: {},
 };
@@ -27,7 +32,7 @@ export default (state = initalState, action) => {
       initStorage();
       return {...state, db_created: true};
     case GET_EVENTS:
-      const { startDate, endDate } = action.payload;
+      const { startDate, endDate } = action.monthPeriod;
       const monthEvents =  getMonthEvents(startDate, endDate);
       let result = [];
       forEach(monthEvents, (event) => {
@@ -38,7 +43,12 @@ export default (state = initalState, action) => {
           result[day] = [event];
         }
       });
-      return {...state, events: result};
+      return {...state, events: result, currentMonthTimeSpan: { startDate, endDate }};
+    case ADD_EVENT:
+      addEvent(action.event);
+      return {...state};
+    case UPDATE_EVENT:
+      updateEvent(action.event);
     case SELECTED_DAY:
       return {...state, selectedDay: action.day}
     case SELECTED_EVENT:

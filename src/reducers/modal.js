@@ -5,6 +5,8 @@ import {
 const initalState = {
   totalDayEvents: false,
   singleEvent: false,
+  addEvent: false,
+  editEvent: false,
 };
 
 export default (state = initalState, action) => {

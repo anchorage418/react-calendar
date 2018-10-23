@@ -31,7 +31,6 @@ const getMonthEvents = (startDate, endDate) => {
   const startDateMoment = moment(startDate, FORMAT);
   const endDateMoment = moment(endDate, FORMAT);
   const events = getFromStorage('calendar_events');
-  console.log('utils events', events);
   let sortedEvents = [];
   forEach(events, (event) => {
     const eventStartMoment = moment(event.event_start, FORMAT);
@@ -41,13 +40,26 @@ const getMonthEvents = (startDate, endDate) => {
     }
   });
   sortedEvents = sortBy(sortedEvents, [(obj) => obj.event_start])
-  console.log('utils sortedEvents', sortedEvents);
   return sortedEvents;
 };
+
+const addEvent = (event) => {
+  const storage = getFromStorage('calendar_events');
+  storage.push(event);
+  setToStorage('calendar_events', storage);
+}
+
+const updateEvent = (event) => {
+  // const storage = getFromStorage('calendar_events');
+  // storage.push(event);
+  // setToStorage('calendar_events', storage);
+}
 
 export {
   setToStorage,
   getFromStorage,
   initStorage,
   getMonthEvents,
+  addEvent,
+  updateEvent,
 };

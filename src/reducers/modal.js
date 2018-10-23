@@ -4,6 +4,7 @@ import {
 
 const initalState = {
   totalDayEvents: false,
+  singleEvent: false,
 };
 
 export default (state = initalState, action) => {

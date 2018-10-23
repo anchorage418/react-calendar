@@ -174,12 +174,14 @@ class Calendar extends Component {
   }
 
   eventTooltipHandler = (day) => {
-    const { selectDay, events, toggleModal } = this.props;
+    const { selectDay, events, toggleModal, selectedDay } = this.props;
     const settings = {
       totalDayEvents: true,
     };
-    selectDay(events[day]);
-    toggleModal(settings);
+    if (!isEqual(events[day], selectedDay)) {
+      selectDay(events[day]);
+    }
+    toggleModal(settings, true);
   }
 
   renderCalendarCell = (date, disabled = false) => {

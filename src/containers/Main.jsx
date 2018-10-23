@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import Calendar from '../components/Calendar';
+import TotalEventsDayModal from '../components/TotalEventsDayModal';
+import SingleEventModal from '../components/SingleEventModal';
 import * as actions from '../actions';
 
 const FORMAT = 'DD-MM-YYYY';
@@ -18,7 +20,7 @@ class Main extends Component {
   // }
   
   render() {
-    const { getEvents, dbIsConnected, events, toggleModal, selectDay } = this.props;
+    const { getEvents, dbIsConnected, events, toggleModal, selectDay, modalState, selectedDay, selectEvent, selectedEvent } = this.props;
     
     return (
       <div>
@@ -31,18 +33,38 @@ class Main extends Component {
             toggleModal={toggleModal}
             selectDay={selectDay}
             dbIsConnected={dbIsConnected}
+            selectedDay={selectedDay}
           />
         </div>
+        {modalState && modalState.totalDayEvents && 
+        <TotalEventsDayModal
+          open={modalState.totalDayEvents}
+          toggleModal={toggleModal}
+          selectedDay={selectedDay}
+          selectEvent={selectEvent}
+          selectedEvent={selectedEvent}
+        />}
+        {modalState && modalState.singleEvent && 
+        <SingleEventModal
+          open={modalState.singleEvent}
+          toggleModal={toggleModal}
+          selectedDay={selectedDay}
+          selectEvent={selectEvent}
+          selectedEvent={selectedEvent}
+        />}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  const { webDatabase } = state;
+  const { webDatabase, modalState } = state;
   return {
     dbIsConnected: webDatabase.db_created,
+    selectedDay: webDatabase.selectedDay,
+    selectedEvent: webDatabase.selectedEvent,
     events: webDatabase.events,  
+    modalState,
   };
 };
 
@@ -57,6 +79,11 @@ function mapDispatchToProps(dispatch) {
     selectDay: (day) => {
       if (day) {
         dispatch(actions.selectDay(day));
+      }
+    },
+    selectEvent: (event) => {
+      if (event) {
+        dispatch(actions.selectEvent(event));
       }
     },
     toggleModal: (settings) => {

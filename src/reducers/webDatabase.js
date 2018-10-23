@@ -5,6 +5,7 @@ import {
   CREATE_DB,
   GET_EVENTS,
   SELECTED_DAY,
+  SELECTED_EVENT,
 } from '../actions/index';
 import { 
   initStorage,
@@ -17,6 +18,7 @@ const initalState = {
   db_created: false,
   events: [],
   selectedDay: [],
+  selectedEvent: {},
 };
 
 export default (state = initalState, action) => {
@@ -36,11 +38,11 @@ export default (state = initalState, action) => {
           result[day] = [event];
         }
       });
-      
-      console.log('reducer result', result);
       return {...state, events: result};
     case SELECTED_DAY:
       return {...state, selectedDay: action.day}
+    case SELECTED_EVENT:
+      return {...state, selectedEvent: action.event}
     default:
       return state;
   }

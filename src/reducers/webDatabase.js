@@ -49,7 +49,7 @@ export default (state = initalState, action) => {
     case ADD_EVENT:
       addEvent(action.event);
       return {...state};
-    case UPDATE_EVENT:
+    // case UPDATE_EVENT:
       // updateEvent(action.event);
     case DELETE_EVENT:
       deleteEvent(action.event);

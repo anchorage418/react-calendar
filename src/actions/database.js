@@ -28,12 +28,12 @@ function addEvent(event) {
   };
 }
 
-function updateEvent(event) {
-  return {
-    type: UPDATE_EVENT,
-    event,
-  };
-}
+// function updateEvent(event) {
+//   return {
+//     type: UPDATE_EVENT,
+//     event,
+//   };
+// }
 
 function deleteEvent(event) {
   return {
@@ -62,6 +62,6 @@ export {
   selectDay,
   selectEvent,
   addEvent,
-  updateEvent,
+  // updateEvent,
   deleteEvent,
 };

@@ -4,7 +4,7 @@ import {
   selectDay,
   selectEvent,
   addEvent,
-  updateEvent,
+  // updateEvent,
   deleteEvent,
 } from './database';
 import {
@@ -14,7 +14,7 @@ import {
 export const CREATE_DB = 'CREATE_DB';
 export const GET_EVENTS = 'GET_EVENTS';
 export const ADD_EVENT = 'ADD_EVENT';
-export const UPDATE_EVENT = 'UPDATE_EVENT';
+// export const UPDATE_EVENT = 'UPDATE_EVENT';
 export const DELETE_EVENT = 'DELETE_EVENT';
 export const SELECTED_DAY = 'SELECTED_DAY';
 export const SELECTED_EVENT = 'SELECTED_EVENT';
@@ -28,6 +28,6 @@ export {
   selectDay,
   selectEvent,
   addEvent,
-  updateEvent,
+  // updateEvent,
   deleteEvent,
 }

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { forEach, sortBy } from 'lodash';
+import { forEach, map, sortBy, isEqual } from 'lodash';
 
 const FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
@@ -55,6 +55,18 @@ const updateEvent = (event) => {
   // setToStorage('calendar_events', storage);
 }
 
+const deleteEvent = (eventToDelete) => {
+  const events = getFromStorage('calendar_events');
+  let newArr = [];
+  forEach(events, (event) => {
+    if (!isEqual(event, eventToDelete)) {
+      newArr.push(event);
+    }
+  });
+  console.log('newArr', newArr);
+  setToStorage('calendar_events', newArr);
+}
+
 export {
   setToStorage,
   getFromStorage,
@@ -62,4 +74,5 @@ export {
   getMonthEvents,
   addEvent,
   updateEvent,
+  deleteEvent,
 };

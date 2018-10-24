@@ -5,6 +5,7 @@ import {
   SELECTED_EVENT,
   ADD_EVENT,
   UPDATE_EVENT,
+  DELETE_EVENT,
 } from './index';
 
 function createDb() {
@@ -34,6 +35,13 @@ function updateEvent(event) {
   };
 }
 
+function deleteEvent(event) {
+  return {
+    type: DELETE_EVENT,
+    event,
+  };
+}
+
 function selectDay(day) {
   return {
     type: SELECTED_DAY,
@@ -55,4 +63,5 @@ export {
   selectEvent,
   addEvent,
   updateEvent,
+  deleteEvent,
 };

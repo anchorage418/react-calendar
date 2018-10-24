@@ -22,6 +22,14 @@ class SingleEventModal extends Component {
     toggleModal(settings);
   }
 
+  deleteEventHandler = () => {
+    const { selectedEvent, deleteEvent, monthTimeSpan, getEvents } = this.props;
+    console.log('selected', selectedEvent);
+    deleteEvent(selectedEvent);
+    getEvents(monthTimeSpan);
+    this.closeHandler();
+  }
+
   render() {
     const { open, classes, selectedEvent: { event_title, event_desc } } = this.props;
 
@@ -38,7 +46,7 @@ class SingleEventModal extends Component {
           <Button onClick={this.editEventHandler}>
             Edit
           </Button>
-          <Button>
+          <Button onClick={this.deleteEventHandler}>
             Delete
           </Button>
         </div>

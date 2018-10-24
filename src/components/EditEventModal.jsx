@@ -17,7 +17,7 @@ class EditEventModal extends Component {
     eventEnd: '',
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const { 
       editModal,
       selectedEvent: { 
@@ -77,7 +77,11 @@ class EditEventModal extends Component {
   }
 
   validate = () => {
-    const { editModal, addEvent, updateEvent, addModal, monthTimeSpan, getEvents, selectedEvent: { event_title, event_desc } } = this.props;
+    const { editModal, addEvent, updateEvent, 
+            deleteEvent, addModal, monthTimeSpan, 
+            getEvents, selectedEvent, 
+            selectedEvent: { event_title, event_desc } 
+          } = this.props;
     const { eventTitle, eventDesc, eventStart, eventEnd } = this.state;
 
     const eventStartMoment = moment(eventStart, FORMAT, true);
@@ -90,7 +94,7 @@ class EditEventModal extends Component {
     && validEventTitle 
     && validEventDesc
     && eventEndMoment.isSameOrAfter(eventStartMoment)) {
-      const event = {
+      const newEvent = {
         event_title: eventTitle,
         event_desc: eventDesc,
         event_start: eventStart,
@@ -98,12 +102,16 @@ class EditEventModal extends Component {
       };
       if (addModal) {
         console.log('valid addMOdal');
-        addEvent(event);
+        addEvent(newEvent);
         getEvents(monthTimeSpan);
         this.closeAddModalHandler();
       } else if (editModal) {
         console.log('valid editMOdal');
-        // updateEvent(event);
+        // updateEvent(newEvent, selectedEvent);
+        deleteEvent(selectedEvent);
+        addEvent(newEvent);
+        getEvents(monthTimeSpan);
+        this.closeEditModalHandler();
         // getEvents(monthTimeSpan);
       }
     }

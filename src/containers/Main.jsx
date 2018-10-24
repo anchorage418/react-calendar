@@ -30,6 +30,7 @@ class Main extends Component {
             toggleModal, selectDay, modalState, 
             selectedDay, selectEvent, selectedEvent, 
             addEvent, monthTimeSpan, updateEvent,
+            deleteEvent,
           } = this.props;
     
     return (
@@ -59,6 +60,7 @@ class Main extends Component {
           selectEvent={selectEvent}
           selectedEvent={selectedEvent}
           addEventHandler={this.addEventHandler}
+          modalState={modalState}
         />}
         {modalState && modalState.singleEvent && 
         <SingleEventModal
@@ -67,6 +69,9 @@ class Main extends Component {
           // selectedDay={selectedDay}
           // selectEvent={selectEvent}
           selectedEvent={selectedEvent}
+          deleteEvent={deleteEvent}
+          monthTimeSpan={monthTimeSpan}
+          getEvents={getEvents}
         />}
         {
         <EditEventModal 
@@ -74,8 +79,9 @@ class Main extends Component {
           editModal={modalState.editEvent}
           addModal={modalState.addEvent}
           addEvent={addEvent}
-          updateEvent={updateEvent}
+          // updateEvent={updateEvent}
           getEvents={getEvents}
+          deleteEvent={deleteEvent}
           monthTimeSpan={monthTimeSpan}
           selectedEvent={selectedEvent}
         />}
@@ -107,13 +113,15 @@ function mapDispatchToProps(dispatch) {
     addEvent: (event) => {
       dispatch(actions.addEvent(event));
     },
-    updateEvent: (event) => {
-      dispatch(actions.updateEvent(event));
+    // updateEvent: (newEvent, oldEvent) => {
+    //   dispatch(actions.deleteEvent(oldEvent));
+    //   dispatch(actions.addEvent(event));
+    // },
+    deleteEvent: (event) => {
+      dispatch(actions.deleteEvent(event));
     },
     selectDay: (day) => {
-      if (day) {
-        dispatch(actions.selectDay(day));
-      }
+      dispatch(actions.selectDay(day));
     },
     selectEvent: (event) => {
       if (event) {

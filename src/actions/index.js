@@ -5,6 +5,7 @@ import {
   selectEvent,
   addEvent,
   updateEvent,
+  deleteEvent,
 } from './database';
 import {
   toggleModal,
@@ -14,6 +15,7 @@ export const CREATE_DB = 'CREATE_DB';
 export const GET_EVENTS = 'GET_EVENTS';
 export const ADD_EVENT = 'ADD_EVENT';
 export const UPDATE_EVENT = 'UPDATE_EVENT';
+export const DELETE_EVENT = 'DELETE_EVENT';
 export const SELECTED_DAY = 'SELECTED_DAY';
 export const SELECTED_EVENT = 'SELECTED_EVENT';
 
@@ -27,4 +29,5 @@ export {
   selectEvent,
   addEvent,
   updateEvent,
+  deleteEvent,
 }

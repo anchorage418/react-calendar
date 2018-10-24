@@ -2,10 +2,26 @@ import React, { Component } from 'react';
 import Modal from './Modal';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import { map, isEqual } from 'lodash';
+import { map, isEqual, isEmpty } from 'lodash';
 import totalEventsModalStyles from '../styles/totalEventsModal';
 
 class TotalEventsDayModal extends Component {
+  // state = {
+  //   currentEvent: {},
+  // }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { selectedDay, toggleModal, modalState } = this.props;
+    // const { currentEvent } = this.state;
+
+    if (!isEqual(prevProps.selectedDay, selectedDay) && isEmpty(selectedDay)) {
+      this.closeHandler();
+    }
+    if (!isEqual(prevProps.selectedDay, selectedDay) && modalState.singleEvent) {
+      toggleModal({ singleEvent: false });
+    }
+  }
+
   closeHandler = () => {
     const { toggleModal } = this.props;
     const settings = {
@@ -20,6 +36,7 @@ class TotalEventsDayModal extends Component {
       singleEvent: true,
     };
     if (!isEqual(selectedEvent, event)) {
+      // this.setState({ currentEvent: event });
       selectEvent(event);
     }
     toggleModal(settings);

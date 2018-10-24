@@ -50,8 +50,11 @@ class Calendar extends Component {
     }
 
     if (!isEmpty(selectedDay) && !isEqual(events, prevProps.events)) {
+      console.log('TRUE')
       const day = moment(selectedDay[0].event_start).date();
-      selectDay(events[day]);
+      console.log('day', events[day]);
+      const eventsDay = events[day] ? events[day] : [];
+      selectDay(eventsDay);
     }
   }
 

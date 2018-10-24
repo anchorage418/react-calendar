@@ -8,12 +8,14 @@ import {
   SELECTED_EVENT,
   ADD_EVENT,
   UPDATE_EVENT,
+  DELETE_EVENT,
 } from '../actions/index';
 import { 
   initStorage,
   getMonthEvents,
   addEvent,
   updateEvent,
+  deleteEvent,
 } from '../utils';
 
 const FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -48,7 +50,10 @@ export default (state = initalState, action) => {
       addEvent(action.event);
       return {...state};
     case UPDATE_EVENT:
-      updateEvent(action.event);
+      // updateEvent(action.event);
+    case DELETE_EVENT:
+      deleteEvent(action.event);
+      return {...state}
     case SELECTED_DAY:
       return {...state, selectedDay: action.day}
     case SELECTED_EVENT:

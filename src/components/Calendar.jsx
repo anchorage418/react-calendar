@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { map, forEach, range, isEmpty } from 'lodash';
+import { map, isEmpty, isEqual } from 'lodash';
 import { Button, Icon } from '@material-ui/core';
 // import NavigateBefore from '@material-ui/icons/NavigateBefore';
 // import NavigateNext from '@material-ui/icons/NavigateNext';
@@ -19,25 +19,42 @@ class Calendar extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
-    const { value, format } = this.props;
+    const { value, format, getEvents } = this.props;
+    const { currentMonth, currentYear, daysInMonth } = this.dates;
+    const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
+    const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
+
     if (value) {
       this.setState({
         value: moment(value, format),
       });
     }
+    getEvents({ startDate, endDate });
   }
 
-  componentDidUpdate(prevProps, prevSate) {
-    // console.log('componentDidUpdate', prevSate);
-    // console.log('componentDidUpdate', this.state);
-    // const { value, format } = this.props;
+  componentDidUpdate(prevProps, prevState) {
+    const { getEvents, events, selectDay, selectedDay } = this.props;
+    const { step } = this.state;
+    const { currentMonth, currentYear, daysInMonth } = this.dates;
+    // "YYYY-MM-DD HH:MM:SS" format is required
+    const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
+    const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
     // if (value && prevSate.value.isSame(value)) {
     //   console.log('new POROP');
     //   this.setState({
     //     value: moment(value, format),
     //   });
     // }
+
+    if (prevState.step !== step) {
+      getEvents({ startDate, endDate });
+    }
+
+    if (!isEmpty(selectedDay) && !isEqual(events, prevProps.events)) {
+      const day = moment(selectedDay[0].event_start).date();
+      const eventsDay = events[day] ? events[day] : [];
+      selectDay(eventsDay);
+    }
   }
 
   get dates() {
@@ -66,7 +83,7 @@ class Calendar extends Component {
 
   prevHandler = () => {
     let { step, value } = this.state;
-    
+
     if (step > 0) {
       this.setState({
         step: step - 1,
@@ -92,7 +109,9 @@ class Calendar extends Component {
     return (
       <Fragment>
         <div>
-          <h4>{`${formatedMonth} ${currentYear}`}</h4>
+          <h1>
+            {`${formatedMonth} ${currentYear}`}
+          </h1>
         </div>
         <div>
           <Button onClick={this.prevHandler} variant="contained" color="primary">
@@ -105,9 +124,9 @@ class Calendar extends Component {
           </Button>
         </div>
         <ul className={classes.week_day__list}>
-          {map(WEEK_DAYS, (day) => {
+          {map(WEEK_DAYS, (day, index) => {
               return (
-                <li className={classes.week_day__item}>
+                <li className={classes.week_day__item} key={`week_day__item_${index}`}>
                   {day}
                 </li>
               )
@@ -128,11 +147,11 @@ class Calendar extends Component {
     let cellsArr = [];
     let i = 1;
     let j = 1;
-    let rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
+    let rowDiv = <div className={classes.cells_row} key={`cells_row__${i}`}>{cellsArr}</div>;
 
     if (pastDays) {
       while (j <= pastDays) {
-        cellsArr.push(this.renderCalendarCell('', true));
+        cellsArr.push(this.renderCalendarCell(j, true));
         j++;
       }
       j = 1;
@@ -144,16 +163,14 @@ class Calendar extends Component {
         cellsArr.push(this.renderCalendarCell(i));
         resultArr.push(rowDiv);
         cellsArr = [];
-        rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
+        rowDiv = <div className={classes.cells_row} key={`cells_row__${i}`}>{cellsArr}</div>;
       }
       if (i === daysInMonth && !isEmpty(cellsArr)) {
         while (j <= lastDays) {
-          cellsArr.push(this.renderCalendarCell('', true));
+          cellsArr.push(this.renderCalendarCell(j + i, true));
           j++;
         }
         resultArr.push(rowDiv);
-        cellsArr = [];
-        rowDiv = <div className={classes.cells_row}>{cellsArr}</div>;
       }
       i++;
     }
@@ -163,47 +180,71 @@ class Calendar extends Component {
     );
   }
 
+  eventTooltipHandler = (day) => {
+    const { selectDay, events, toggleModal, selectedDay } = this.props;
+    const settings = {
+      totalDayEvents: true,
+    };
+    if (!isEqual(events[day], selectedDay)) {
+      selectDay(events[day]);
+    }
+    toggleModal(settings, true);
+  }
+
   renderCalendarCell = (date, disabled = false) => {
     const { step } = this.state; 
-    const { classes } = this.props;
+    const { classes, events } = this.props;
     const { currentDay } = this.dates;
+    const day = disabled ? '' : date;
+    const itemKey = disabled ? `disabled_cell__${date}` : `cell__${date}`;
 
-    const currenDayClass = step === 0 && currentDay === date ? classes.current_day : '';
+    const currenDayClass = step === 0 && !disabled && currentDay === date ? classes.current_day : '';
     const disabledDayClass = disabled ? classes.disabled_day : '';
-    const pastDayClass = step === 0 && date && date < currentDay ? classes.past_day : '';
+    const pastDayClass = step === 0 && !disabled && date < currentDay ? classes.past_day : '';
 
     const cellClasses = `${classes.cell} ${currenDayClass} ${disabledDayClass} ${pastDayClass}`;
 
     return (
-      <div className={cellClasses}>{date}</div>
+      <div className={cellClasses} key={itemKey}>
+        {day}
+        {!disabled && events && events[date] &&
+          <div 
+            className={classes.events_tooltip} 
+            onClick={() => this.eventTooltipHandler(date)}
+          >
+            <span className={classes.tooltip__value}>
+              {events[date].length}
+            </span>
+          </div>
+        }
+      </div>
     );
   }
 
   render() {
     const { classes } = this.props;
-    const dates = this.dates;
-    console.log('dates', dates);
-    console.log('this.state', this.state);
-    console.log('this.props', this.props);
 
     return (
-      <div>
-        <div>
-          <div className={classes.calendar_header}>
-            {this.renderCalendarHeader()}
-          </div>
-          <div className={classes.calendar_body}>
-            {this.renderCalendarBody()}
-          </div>
+      <div className={classes.calendar__root}>
+        <div className={classes.calendar_header}>
+          {this.renderCalendarHeader()}
+        </div>
+        <div className={classes.calendar_body}>
+          {this.renderCalendarBody()}
         </div>
       </div>
     );
   }
 }
 
-Calendar.PropTypes = {
+Calendar.propTypes = {
+  classes: PropTypes.object.isRequired,
   value: PropTypes.string,
   format: PropTypes.string.isRequired,   
+  getEvents: PropTypes.func.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  selectDay: PropTypes.func.isRequired,
+  selectedDay: PropTypes.array,
 }
 
 export default withStyles(calendarStyles)(Calendar);

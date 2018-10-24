@@ -1,20 +1,16 @@
 import moment from 'moment';
-import { isEmpty, forEach } from 'lodash';
+import { forEach } from 'lodash';
 
 import {
-  CREATE_DB,
   GET_EVENTS,
   SELECTED_DAY,
   SELECTED_EVENT,
   ADD_EVENT,
-  UPDATE_EVENT,
   DELETE_EVENT,
 } from '../actions/index';
 import { 
-  initStorage,
   getMonthEvents,
   addEvent,
-  updateEvent,
   deleteEvent,
 } from '../utils';
 
@@ -30,9 +26,6 @@ const initalState = {
 
 export default (state = initalState, action) => {
   switch(action.type) {
-    // case CREATE_DB:
-    //   initStorage();
-    //   return {...state, db_created: true};
     case GET_EVENTS:
       const { startDate, endDate } = action.monthPeriod;
       const monthEvents =  getMonthEvents(startDate, endDate);
@@ -49,8 +42,6 @@ export default (state = initalState, action) => {
     case ADD_EVENT:
       addEvent(action.event);
       return {...state};
-    // case UPDATE_EVENT:
-      // updateEvent(action.event);
     case DELETE_EVENT:
       deleteEvent(action.event);
       return {...state}

@@ -1,18 +1,10 @@
 import { 
-  CREATE_DB,
   GET_EVENTS,
   SELECTED_DAY,
   SELECTED_EVENT,
   ADD_EVENT,
-  UPDATE_EVENT,
   DELETE_EVENT,
 } from './index';
-
-function createDb() {
-  return {
-    type: CREATE_DB,
-  };
-}
 
 function getEvents(monthPeriod) {
   return {
@@ -27,13 +19,6 @@ function addEvent(event) {
     event,
   };
 }
-
-// function updateEvent(event) {
-//   return {
-//     type: UPDATE_EVENT,
-//     event,
-//   };
-// }
 
 function deleteEvent(event) {
   return {
@@ -57,11 +42,9 @@ function selectEvent(event) {
 }
 
 export {
-  createDb,
   getEvents,
   selectDay,
   selectEvent,
   addEvent,
-  // updateEvent,
   deleteEvent,
 };

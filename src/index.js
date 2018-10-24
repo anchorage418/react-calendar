@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
@@ -15,13 +15,13 @@ const store = createStore(
 );
 
 ReactDOM.render(
-  <div>
+  <Fragment>
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
         <App />
       </MuiThemeProvider>
     </Provider>
-  </div>,
+  </Fragment>,
 document.getElementById('root')
 );
 

@@ -1,12 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 import Calendar from '../components/Calendar';
 import TotalEventsDayModal from '../components/TotalEventsDayModal';
 import SingleEventModal from '../components/SingleEventModal';
 import EditEventModal from '../components/EditEventModal';
 import * as actions from '../actions';
+import mainStyles from '../styles/main';
 
 const FORMAT = 'DD-MM-YYYY';
 
@@ -23,26 +26,31 @@ class Main extends Component {
     const { getEvents, events, toggleModal, 
             selectDay, modalState, deleteEvent,
             selectedDay, selectEvent, selectedEvent, 
-            addEvent, monthTimeSpan,
+            addEvent, monthTimeSpan, classes,
           } = this.props;
     
     return (
-      <div>
-        <div>
-          <Calendar 
-            // value={''}
-            format={FORMAT}
-            events={events}
-            getEvents={getEvents}
-            toggleModal={toggleModal}
-            selectDay={selectDay}
-            selectedDay={selectedDay}
-          />
-          <div>
-            <Button color="primary" onClick={this.addEventHandler}>
-              Add event
-            </Button>
-          </div>
+      <Fragment>
+        <div className={classes.main_container}>
+          <Paper
+            elevation={10}
+            className={classes.root}
+          > 
+            <Calendar 
+              // value={''}
+              format={FORMAT}
+              events={events}
+              getEvents={getEvents}
+              toggleModal={toggleModal}
+              selectDay={selectDay}
+              selectedDay={selectedDay}
+            />
+            <div>
+              <Button color="primary" onClick={this.addEventHandler}>
+                Add event
+              </Button>
+            </div>
+          </Paper>
         </div>
         {modalState && modalState.totalDayEvents && 
         <TotalEventsDayModal
@@ -74,7 +82,7 @@ class Main extends Component {
           monthTimeSpan={monthTimeSpan}
           selectedEvent={selectedEvent}
         />}
-      </div>
+      </Fragment>
     );
   }
 }
@@ -91,6 +99,7 @@ const mapStateToProps = (state) => {
 };
 
 Main.propTypes = {
+  classes: PropTypes.object.isRequired,
   selectedDay: PropTypes.array,
   selectedEvent: PropTypes.object,
   events: PropTypes.array,
@@ -123,4 +132,4 @@ function mapDispatchToProps(dispatch) {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(mainStyles)(Main));

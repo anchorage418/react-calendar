@@ -109,7 +109,9 @@ class Calendar extends Component {
     return (
       <Fragment>
         <div>
-          <h4>{`${formatedMonth} ${currentYear}`}</h4>
+          <h1>
+            {`${formatedMonth} ${currentYear}`}
+          </h1>
         </div>
         <div>
           <Button onClick={this.prevHandler} variant="contained" color="primary">
@@ -210,7 +212,9 @@ class Calendar extends Component {
             className={classes.events_tooltip} 
             onClick={() => this.eventTooltipHandler(date)}
           >
-            {events[date].length}
+            <span className={classes.tooltip__value}>
+              {events[date].length}
+            </span>
           </div>
         }
       </div>
@@ -221,14 +225,12 @@ class Calendar extends Component {
     const { classes } = this.props;
 
     return (
-      <div>
-        <div>
-          <div className={classes.calendar_header}>
-            {this.renderCalendarHeader()}
-          </div>
-          <div className={classes.calendar_body}>
-            {this.renderCalendarBody()}
-          </div>
+      <div className={classes.calendar__root}>
+        <div className={classes.calendar_header}>
+          {this.renderCalendarHeader()}
+        </div>
+        <div className={classes.calendar_body}>
+          {this.renderCalendarBody()}
         </div>
       </div>
     );
@@ -236,6 +238,7 @@ class Calendar extends Component {
 }
 
 Calendar.propTypes = {
+  classes: PropTypes.object.isRequired,
   value: PropTypes.string,
   format: PropTypes.string.isRequired,   
   getEvents: PropTypes.func.isRequired,

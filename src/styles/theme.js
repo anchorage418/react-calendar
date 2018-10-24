@@ -4,4 +4,5 @@ export default createMuiTheme({
   typography: {
     useNextVariants: true,
   },
+  fontFamily: 'Arial,'
 });

@@ -1,4 +1,7 @@
 export default () => ({
+  calendar__root: {
+
+  },
   calendar_header: {
 
   },
@@ -7,23 +10,39 @@ export default () => ({
   },
   cell: {
     position: 'relative',
-    width: '100px',
+    width: '100%',
     height: '100px',
+    padding: '6px',
     display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    borderRight: '1px solid rgba(128, 128, 128, 0.21)',
+    '&:first-child': {
+      borderLeft: '1px solid rgba(128, 128, 128, 0.21)',
+    },
+    // fontWeight: 'bold',
+    fontSize: '30px',
+    '&:hover': {
+      backgroundColor: '#3f51b5',
+      color: '#fff',
+    },
   },
   current_day: {
     fontWeight: 'bold',
   },
   cells_row: {
     display: 'flex',
+    borderBottom: '1px solid rgba(128, 128, 128, 0.21)',
+    '&:first-child': {
+      borderTop: '1px solid rgba(128, 128, 128, 0.21)',
+    },
   },
   disabled_day: {
-    backgroundColor: 'grey',
+    backgroundColor: 'rgba(128, 128, 128, 0.28)',
+    '&:hover': {
+      backgroundColor: 'rgba(128, 128, 128, 0.28)',
+    },
   },
   past_day: {
-    color: 'blue',
+    color: 'rgba(48, 63, 159, 0.56)',
   },
   week_day__list: {
     display: 'flex',
@@ -33,22 +52,27 @@ export default () => ({
   week_day__item: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    width: '100px',
-    height: '30px',
+    width: '100%',
+    height: '40px',
+    fontSize: '24px',
   },
   events_tooltip: {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    bottom: 0,
+    right: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    backgroundColor: '#303f9f',
+    width: '0',
+    height: '0',
+    borderBottom: '70px solid #303f9f',
+    borderLeft: '70px solid transparent',
+    cursor: 'pointer',
+  },
+  tooltip__value: {
+    position: 'relative',
+    top: '49px',
+    right: '25px',
     color: '#fff',
   },
 });

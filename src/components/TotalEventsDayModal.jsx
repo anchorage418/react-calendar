@@ -60,7 +60,9 @@ class TotalEventsDayModal extends Component {
         closeCallback={this.closeHandler}
       >
         <div className={classes.modal__content}>
-          <h2>Events List</h2>
+          <h2 className={classes.title}>
+            Events List
+          </h2>
           <div className={classes.modal__body}>
             {this.renderEventItem()}
           </div>

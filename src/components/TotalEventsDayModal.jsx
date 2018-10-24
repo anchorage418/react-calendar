@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Modal from './Modal';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
@@ -6,13 +7,8 @@ import { map, isEqual, isEmpty } from 'lodash';
 import totalEventsModalStyles from '../styles/totalEventsModal';
 
 class TotalEventsDayModal extends Component {
-  // state = {
-  //   currentEvent: {},
-  // }
-
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     const { selectedDay, toggleModal, modalState } = this.props;
-    // const { currentEvent } = this.state;
 
     if (!isEqual(prevProps.selectedDay, selectedDay) && isEmpty(selectedDay)) {
       this.closeHandler();
@@ -36,7 +32,6 @@ class TotalEventsDayModal extends Component {
       singleEvent: true,
     };
     if (!isEqual(selectedEvent, event)) {
-      // this.setState({ currentEvent: event });
       selectEvent(event);
     }
     toggleModal(settings);
@@ -78,6 +73,16 @@ class TotalEventsDayModal extends Component {
       </Modal>
     );
   }
+}
+
+TotalEventsDayModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  selectedDay: PropTypes.array.isRequired,
+  selectEvent: PropTypes.func.isRequired,
+  selectedEvent: PropTypes.object.isRequired,
+  addEventHandler: PropTypes.func.isRequired,
+  modalState: PropTypes.object.isRequired,
 }
 
 export default withStyles(totalEventsModalStyles)(TotalEventsDayModal);

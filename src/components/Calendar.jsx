@@ -19,19 +19,21 @@ class Calendar extends Component {
   }
 
   componentDidMount() {
-    console.log('CALENDAR componentDidMount');
-    const { value, format, dbIsConnected, getEvents } = this.props;
+    const { value, format, getEvents } = this.props;
+    const { currentMonth, currentYear, daysInMonth } = this.dates;
+    const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
+    const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
+
     if (value) {
       this.setState({
         value: moment(value, format),
       });
     }
+    getEvents({ startDate, endDate });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // console.log('componentDidUpdate', prevSate);
-    // console.log('componentDidUpdate', this.state);
-    const { value, format, dbIsConnected, getEvents, events, selectDay, selectedDay } = this.props;
+    const { getEvents, events, selectDay, selectedDay } = this.props;
     const { step } = this.state;
     const { currentMonth, currentYear, daysInMonth } = this.dates;
     // "YYYY-MM-DD HH:MM:SS" format is required
@@ -44,15 +46,12 @@ class Calendar extends Component {
     //   });
     // }
 
-    if ((prevProps.dbIsConnected !== dbIsConnected && dbIsConnected)
-        || (prevState.step !== step)) {
+    if (prevState.step !== step) {
       getEvents({ startDate, endDate });
     }
 
     if (!isEmpty(selectedDay) && !isEqual(events, prevProps.events)) {
-      console.log('TRUE')
       const day = moment(selectedDay[0].event_start).date();
-      console.log('day', events[day]);
       const eventsDay = events[day] ? events[day] : [];
       selectDay(eventsDay);
     }
@@ -83,7 +82,6 @@ class Calendar extends Component {
   }
 
   prevHandler = () => {
-    // const { getEvents } = this.props;
     let { step, value } = this.state;
 
     if (step > 0) {
@@ -95,7 +93,6 @@ class Calendar extends Component {
   }
 
   nextHandler = () => {
-    // const { getEvents } = this.props;
     let { step, value } = this.state;
 
     this.setState({
@@ -209,7 +206,10 @@ class Calendar extends Component {
       <div className={cellClasses} key={itemKey}>
         {day}
         {!disabled && events && events[date] &&
-          <div className={classes.events_tooltip} onClick={() => this.eventTooltipHandler(date)}>
+          <div 
+            className={classes.events_tooltip} 
+            onClick={() => this.eventTooltipHandler(date)}
+          >
             {events[date].length}
           </div>
         }
@@ -219,10 +219,6 @@ class Calendar extends Component {
 
   render() {
     const { classes } = this.props;
-    // const dates = this.dates;
-    // console.log('dates', dates);
-    // console.log('this.state', this.state);
-    // console.log('this.props', this.props);
 
     return (
       <div>
@@ -245,6 +241,7 @@ Calendar.propTypes = {
   getEvents: PropTypes.func.isRequired,
   toggleModal: PropTypes.func.isRequired,
   selectDay: PropTypes.func.isRequired,
+  selectedDay: PropTypes.array,
 }
 
 export default withStyles(calendarStyles)(Calendar);

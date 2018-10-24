@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Modal from './Modal';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import { map, isEqual } from 'lodash';
-import singleEventModalStyles from '../styles/totalEventsModal';
+import singleEventModalStyles from '../styles/singleEventModal';
 
 class SingleEventModal extends Component {
   closeHandler = () => {
@@ -24,7 +24,6 @@ class SingleEventModal extends Component {
 
   deleteEventHandler = () => {
     const { selectedEvent, deleteEvent, monthTimeSpan, getEvents } = this.props;
-    console.log('selected', selectedEvent);
     deleteEvent(selectedEvent);
     getEvents(monthTimeSpan);
     this.closeHandler();
@@ -53,6 +52,16 @@ class SingleEventModal extends Component {
       </Modal>
     );
   }
+}
+
+SingleEventModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  toggleModal: PropTypes.func.isRequired,
+  selectEvent: PropTypes.func,
+  deleteEvent: PropTypes.func.isRequired,
+  selectedEvent: PropTypes.object.isRequired,
+  monthTimeSpan: PropTypes.object.isRequired,
+  getEvents: PropTypes.func.isRequired,
 }
 
 export default withStyles(singleEventModalStyles)(SingleEventModal);

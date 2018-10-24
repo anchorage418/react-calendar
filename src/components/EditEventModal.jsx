@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import Modal from './Modal';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
-import { map, isEqual, trim } from 'lodash';
+import { trim } from 'lodash';
 import editEventModalStyles from '../styles/totalEventsModal';
 
 const FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -77,10 +78,10 @@ class EditEventModal extends Component {
   }
 
   validate = () => {
-    const { editModal, addEvent, updateEvent, 
-            deleteEvent, addModal, monthTimeSpan, 
-            getEvents, selectedEvent, 
-            selectedEvent: { event_title, event_desc } 
+    // TODO: adjust validation
+    const { editModal, addEvent, monthTimeSpan, 
+            deleteEvent, addModal, getEvents,
+            selectedEvent, selectedEvent: { event_title, event_desc } 
           } = this.props;
     const { eventTitle, eventDesc, eventStart, eventEnd } = this.state;
 
@@ -101,24 +102,19 @@ class EditEventModal extends Component {
         event_end: eventEnd,
       };
       if (addModal) {
-        console.log('valid addMOdal');
         addEvent(newEvent);
         getEvents(monthTimeSpan);
         this.closeAddModalHandler();
       } else if (editModal) {
-        console.log('valid editMOdal');
-        // updateEvent(newEvent, selectedEvent);
         deleteEvent(selectedEvent);
         addEvent(newEvent);
         getEvents(monthTimeSpan);
         this.closeEditModalHandler();
-        // getEvents(monthTimeSpan);
       }
     }
   }
 
   renderForm = () => {
-    const { classes, addModal, editModal } = this.props;
     const {
       eventTitle,
       eventDesc,
@@ -236,6 +232,17 @@ class EditEventModal extends Component {
       </Fragment>
     );
   }
+}
+
+EditEventModal.propTypes = {
+  toggleModal: PropTypes.func.isRequired,
+  editModal: PropTypes.bool.isRequired,
+  addModal: PropTypes.bool.isRequired,
+  addEvent: PropTypes.func.isRequired,
+  getEvents: PropTypes.func.isRequired,
+  deleteEvent: PropTypes.func.isRequired,
+  monthTimeSpan: PropTypes.object.isRequired,
+  selectedEvent: PropTypes.object.isRequired,
 }
 
 export default withStyles(editEventModalStyles)(EditEventModal);

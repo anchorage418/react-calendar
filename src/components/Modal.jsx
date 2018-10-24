@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 
 class Modal extends Component {
@@ -19,6 +20,11 @@ class Modal extends Component {
       </Dialog>
     );
   }
+}
+
+Modal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  closeCallback: PropTypes.func.isRequired,
 }
 
 export default Modal;

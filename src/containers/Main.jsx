@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Button from '@material-ui/core/Button';
 import Calendar from '../components/Calendar';
@@ -10,13 +11,6 @@ import * as actions from '../actions';
 const FORMAT = 'DD-MM-YYYY';
 
 class Main extends Component {
-  componentDidMount() {
-    console.log('MAIN componentDidMount');
-    const { createDb, getEvents } = this.props;
-    createDb();
-    // getEvents();
-  }
-
   addEventHandler = () => {
     const { toggleModal } = this.props;
     const settings = {
@@ -26,11 +20,10 @@ class Main extends Component {
   }
   
   render() {
-    const { getEvents, dbIsConnected, events, 
-            toggleModal, selectDay, modalState, 
+    const { getEvents, events, toggleModal, 
+            selectDay, modalState, deleteEvent,
             selectedDay, selectEvent, selectedEvent, 
-            addEvent, monthTimeSpan, updateEvent,
-            deleteEvent,
+            addEvent, monthTimeSpan,
           } = this.props;
     
     return (
@@ -43,7 +36,6 @@ class Main extends Component {
             getEvents={getEvents}
             toggleModal={toggleModal}
             selectDay={selectDay}
-            dbIsConnected={dbIsConnected}
             selectedDay={selectedDay}
           />
           <div>
@@ -66,8 +58,6 @@ class Main extends Component {
         <SingleEventModal
           open={modalState.singleEvent}
           toggleModal={toggleModal}
-          // selectedDay={selectedDay}
-          // selectEvent={selectEvent}
           selectedEvent={selectedEvent}
           deleteEvent={deleteEvent}
           monthTimeSpan={monthTimeSpan}
@@ -79,7 +69,6 @@ class Main extends Component {
           editModal={modalState.editEvent}
           addModal={modalState.addEvent}
           addEvent={addEvent}
-          // updateEvent={updateEvent}
           getEvents={getEvents}
           deleteEvent={deleteEvent}
           monthTimeSpan={monthTimeSpan}
@@ -93,7 +82,6 @@ class Main extends Component {
 const mapStateToProps = (state) => {
   const { webDatabase, modalState } = state;
   return {
-    dbIsConnected: webDatabase.db_created,
     selectedDay: webDatabase.selectedDay,
     selectedEvent: webDatabase.selectedEvent,
     events: webDatabase.events,
@@ -102,21 +90,22 @@ const mapStateToProps = (state) => {
   };
 };
 
+Main.propTypes = {
+  selectedDay: PropTypes.array,
+  selectedEvent: PropTypes.object,
+  events: PropTypes.array,
+  monthTimeSpan: PropTypes.object,
+  modalState: PropTypes.object,
+}
+
 function mapDispatchToProps(dispatch) {
   return {
-    createDb: () => {
-      dispatch(actions.createDb());
-    },
     getEvents: (monthPeriod) => {
       dispatch(actions.getEvents(monthPeriod));
     },
     addEvent: (event) => {
       dispatch(actions.addEvent(event));
     },
-    // updateEvent: (newEvent, oldEvent) => {
-    //   dispatch(actions.deleteEvent(oldEvent));
-    //   dispatch(actions.addEvent(event));
-    // },
     deleteEvent: (event) => {
       dispatch(actions.deleteEvent(event));
     },

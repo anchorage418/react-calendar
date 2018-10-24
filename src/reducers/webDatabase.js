@@ -30,9 +30,9 @@ const initalState = {
 
 export default (state = initalState, action) => {
   switch(action.type) {
-    case CREATE_DB:
-      initStorage();
-      return {...state, db_created: true};
+    // case CREATE_DB:
+    //   initStorage();
+    //   return {...state, db_created: true};
     case GET_EVENTS:
       const { startDate, endDate } = action.monthPeriod;
       const monthEvents =  getMonthEvents(startDate, endDate);

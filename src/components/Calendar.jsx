@@ -11,46 +11,54 @@ import calendarStyles from '../styles/calendar';
 
 const WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const WEEK_TOTAL = 7;
+const FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 class Calendar extends Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    value: PropTypes.string,
+    format: PropTypes.string.isRequired,
+    getEvents: PropTypes.func.isRequired,
+    toggleModal: PropTypes.func.isRequired,
+    selectDay: PropTypes.func.isRequired,
+    selectedDay: PropTypes.array,
+  };
+
   state = {
     value: moment(),  
     step: 0,
-  }
+  };
 
   componentDidMount() {
     const { value, format, getEvents } = this.props;
-    const { currentMonth, currentYear, daysInMonth } = this.dates;
-    const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
-    const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
+    const { date } = this.dates;
+    const monthInterval = this.getMonthInterval(date);
 
     if (value) {
       this.setState({
         value: moment(value, format),
       });
     }
-    getEvents({ startDate, endDate });
+    getEvents(monthInterval);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { getEvents, events, selectDay, selectedDay } = this.props;
+    const { getEvents, events, selectDay, selectedDay, value, format } = this.props;
     const { step } = this.state;
-    const { currentMonth, currentYear, daysInMonth } = this.dates;
-    // "YYYY-MM-DD HH:MM:SS" format is required
-    const startDate = `${currentYear}-${currentMonth}-01 00:00:00`;
-    const endDate = `${currentYear}-${currentMonth}-${daysInMonth} 23:59:59`;
-    // if (value && prevSate.value.isSame(value)) {
-    //   console.log('new POROP');
-    //   this.setState({
-    //     value: moment(value, format),
-    //   });
-    // }
+    const { date } = this.dates;
+    const monthInterval = this.getMonthInterval(date);
 
-    if (prevState.step !== step) {
-      getEvents({ startDate, endDate });
+    if (value && prevState.value.isSame(value)) {
+      this.setState({
+        value: moment(value, format),
+      });
     }
 
-    if (!isEmpty(selectedDay) && !isEqual(events, prevProps.events)) {
+    if (prevState.step !== step) {
+      getEvents(monthInterval);
+    }
+
+    if (selectedDay && selectedDay[0] && !isEqual(events, prevProps.events)) {
       const day = moment(selectedDay[0].event_start).date();
       const eventsDay = events[day] ? events[day] : [];
       selectDay(eventsDay);
@@ -81,6 +89,13 @@ class Calendar extends Component {
     }; 
   }
 
+  getMonthInterval = (date) => {
+    // "YYYY-MM-DD HH:MM:SS" format is required
+    const startDate = date.startOf('month').format(FORMAT);
+    const endDate = date.endOf('month').format(FORMAT);
+    return { startDate, endDate };
+  };
+
   prevHandler = () => {
     let { step, value } = this.state;
 
@@ -90,7 +105,7 @@ class Calendar extends Component {
         value: value.subtract(1, 'M')
       });
     }
-  }
+  };
 
   nextHandler = () => {
     let { step, value } = this.state;
@@ -99,7 +114,7 @@ class Calendar extends Component {
       step: step + 1, 
       value: value.add(1, 'M')
     });
-  }
+  };
 
   renderCalendarHeader = () => {
     const { classes } = this.props;
@@ -134,7 +149,7 @@ class Calendar extends Component {
         </ul>
       </Fragment>
     );
-  }
+  };
   
   renderCalendarBody = () => {
     const { date, daysInMonth, startDay, endDay } = this.dates;
@@ -178,7 +193,7 @@ class Calendar extends Component {
     return (
       resultArr
     );
-  }
+  };
 
   eventTooltipHandler = (day) => {
     const { selectDay, events, toggleModal, selectedDay } = this.props;
@@ -188,8 +203,8 @@ class Calendar extends Component {
     if (!isEqual(events[day], selectedDay)) {
       selectDay(events[day]);
     }
-    toggleModal(settings, true);
-  }
+    toggleModal(settings);
+  };
 
   renderCalendarCell = (date, disabled = false) => {
     const { step } = this.state; 
@@ -219,7 +234,7 @@ class Calendar extends Component {
         }
       </div>
     );
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -235,16 +250,6 @@ class Calendar extends Component {
       </div>
     );
   }
-}
-
-Calendar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  value: PropTypes.string,
-  format: PropTypes.string.isRequired,   
-  getEvents: PropTypes.func.isRequired,
-  toggleModal: PropTypes.func.isRequired,
-  selectDay: PropTypes.func.isRequired,
-  selectedDay: PropTypes.array,
 }
 
 export default withStyles(calendarStyles)(Calendar);

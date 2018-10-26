@@ -7,6 +7,16 @@ import { map, isEqual, isEmpty } from 'lodash';
 import totalEventsModalStyles from '../styles/totalEventsModal';
 
 class TotalEventsDayModal extends Component {
+  static propTypes = {
+    open: PropTypes.bool.isRequired,
+    toggleModal: PropTypes.func.isRequired,
+    selectedDay: PropTypes.array.isRequired,
+    selectEvent: PropTypes.func.isRequired,
+    selectedEvent: PropTypes.object.isRequired,
+    addEventHandler: PropTypes.func.isRequired,
+    modalState: PropTypes.object.isRequired,
+  };
+
   componentDidUpdate(prevProps) {
     const { selectedDay, toggleModal, modalState } = this.props;
 
@@ -24,7 +34,7 @@ class TotalEventsDayModal extends Component {
       totalDayEvents: false,
     };
     toggleModal(settings);
-  }
+  };
 
   eventClickHandler = (event) => {
     const { toggleModal, selectEvent, selectedEvent } = this.props;
@@ -35,7 +45,7 @@ class TotalEventsDayModal extends Component {
       selectEvent(event);
     }
     toggleModal(settings);
-  }
+  };
 
   renderEventItem = () => {
     const { classes, selectedDay } = this.props;
@@ -49,7 +59,7 @@ class TotalEventsDayModal extends Component {
         {event.event_title}
       </div>
     ));
-  }
+  };
 
   render() {
     const { open, classes, addEventHandler } = this.props;
@@ -75,16 +85,6 @@ class TotalEventsDayModal extends Component {
       </Modal>
     );
   }
-}
-
-TotalEventsDayModal.propTypes = {
-  open: PropTypes.bool.isRequired,
-  toggleModal: PropTypes.func.isRequired,
-  selectedDay: PropTypes.array.isRequired,
-  selectEvent: PropTypes.func.isRequired,
-  selectedEvent: PropTypes.object.isRequired,
-  addEventHandler: PropTypes.func.isRequired,
-  modalState: PropTypes.object.isRequired,
 }
 
 export default withStyles(totalEventsModalStyles)(TotalEventsDayModal);

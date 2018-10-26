@@ -44,11 +44,11 @@ export default (state = initalState, action) => {
       return {...state};
     case DELETE_EVENT:
       deleteEvent(action.event);
-      return {...state}
+      return {...state};
     case SELECTED_DAY:
-      return {...state, selectedDay: action.day}
+      return {...state, selectedDay: action.day};
     case SELECTED_EVENT:
-      return {...state, selectedEvent: action.event}
+      return {...state, selectedEvent: action.event};
     default:
       return state;
   }

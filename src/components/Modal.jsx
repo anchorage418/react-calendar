@@ -3,10 +3,15 @@ import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 
 class Modal extends Component {
+  static propTypes = {
+    open: PropTypes.bool.isRequired,
+    closeCallback: PropTypes.func.isRequired,
+  };
+
   closeHandler = () => {
     const { closeCallback } = this.props;
     closeCallback();
-  }
+  };
 
   render() {
     const { open } = this.props;
@@ -20,11 +25,6 @@ class Modal extends Component {
       </Dialog>
     );
   }
-}
-
-Modal.propTypes = {
-  open: PropTypes.bool.isRequired,
-  closeCallback: PropTypes.func.isRequired,
 }
 
 export default Modal;

@@ -14,19 +14,37 @@ import mainStyles from '../styles/main';
 const FORMAT = 'DD-MM-YYYY';
 
 class Main extends Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    selectedDay: PropTypes.array,
+    selectedEvent: PropTypes.object,
+    events: PropTypes.array,
+    monthTimeSpan: PropTypes.object,
+    modalState: PropTypes.object,
+  };
+
   addEventHandler = () => {
     const { toggleModal } = this.props;
     const settings = {
       addEvent: true,
     };
     toggleModal(settings);
-  }
+  };
   
   render() {
-    const { getEvents, events, toggleModal, 
-            selectDay, modalState, deleteEvent,
-            selectedDay, selectEvent, selectedEvent, 
-            addEvent, monthTimeSpan, classes,
+    const {
+      classes,
+      getEvents,
+      events,
+      toggleModal,
+      selectDay,
+      modalState,
+      deleteEvent,
+      selectedDay,
+      selectEvent,
+      selectedEvent,
+      addEvent,
+      monthTimeSpan,
           } = this.props;
     
     return (
@@ -37,7 +55,6 @@ class Main extends Component {
             className={classes.root}
           > 
             <Calendar 
-              // value={''}
               format={FORMAT}
               events={events}
               getEvents={getEvents}
@@ -98,15 +115,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-Main.propTypes = {
-  classes: PropTypes.object.isRequired,
-  selectedDay: PropTypes.array,
-  selectedEvent: PropTypes.object,
-  events: PropTypes.array,
-  monthTimeSpan: PropTypes.object,
-  modalState: PropTypes.object,
-}
-
 function mapDispatchToProps(dispatch) {
   return {
     getEvents: (monthPeriod) => {
@@ -130,6 +138,6 @@ function mapDispatchToProps(dispatch) {
       dispatch(actions.toggleModal(settings));
     },
   }
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(mainStyles)(Main));

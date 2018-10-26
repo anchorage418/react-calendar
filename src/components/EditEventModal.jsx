@@ -11,12 +11,23 @@ import editEventModalStyles from '../styles/totalEventsModal';
 const FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 class EditEventModal extends Component {
+  static propTypes = {
+    toggleModal: PropTypes.func.isRequired,
+    editModal: PropTypes.bool.isRequired,
+    addModal: PropTypes.bool.isRequired,
+    addEvent: PropTypes.func.isRequired,
+    getEvents: PropTypes.func.isRequired,
+    deleteEvent: PropTypes.func.isRequired,
+    monthTimeSpan: PropTypes.object.isRequired,
+    selectedEvent: PropTypes.object.isRequired,
+  };
+
   state = {
     eventTitle: '',
     eventDesc: '',
     eventStart: '',
     eventEnd: '',
-  }
+  };
 
   componentDidUpdate(prevProps) {
     const { 
@@ -52,7 +63,7 @@ class EditEventModal extends Component {
       addEvent: false,
     };
     toggleModal(settings);
-  }
+  };
 
   closeEditModalHandler = () => {
     const { toggleModal } = this.props;
@@ -60,7 +71,7 @@ class EditEventModal extends Component {
       editEvent: false,
     };
     toggleModal(settings);
-  }
+  };
 
   changeHandler = (e) => {
     const elId = e.target.id;
@@ -75,14 +86,23 @@ class EditEventModal extends Component {
     } else if (elId === 'event_end') {
       this.setState({ eventEnd: elValue });
     }
-  }
+  };
 
   validate = () => {
     // TODO: adjust validation
-    const { editModal, addEvent, monthTimeSpan, 
-            deleteEvent, addModal, getEvents,
-            selectedEvent, selectedEvent: { event_title, event_desc } 
-          } = this.props;
+    const {
+      editModal,
+      addEvent,
+      monthTimeSpan,
+      deleteEvent,
+      addModal,
+      getEvents,
+      selectedEvent,
+      selectedEvent: {
+        event_title,
+        event_desc
+      }
+    } = this.props;
     const { eventTitle, eventDesc, eventStart, eventEnd } = this.state;
 
     const eventStartMoment = moment(eventStart, FORMAT, true);
@@ -112,7 +132,7 @@ class EditEventModal extends Component {
         this.closeEditModalHandler();
       }
     }
-  }
+  };
 
   renderForm = () => {
     const {
@@ -127,7 +147,7 @@ class EditEventModal extends Component {
         <div>
           <TextField 
             label="Event title"
-            onChange={(e) => this.changeHandler(e)}
+            onChange={this.changeHandler}
             id="event_title"
             value={eventTitle}
           />
@@ -135,7 +155,7 @@ class EditEventModal extends Component {
         <div>
           <TextField 
             label="Event start"
-            onChange={(e) => this.changeHandler(e)}
+            onChange={this.changeHandler}
             id="event_start"
             placeholder="YYYY-MM-DD HH:mm:ss"
             value={eventStart}
@@ -144,7 +164,7 @@ class EditEventModal extends Component {
         <div>
           <TextField 
             label="Event end"
-            onChange={(e) => this.changeHandler(e)}
+            onChange={this.changeHandler}
             id="event_end"
             placeholder="YYYY-MM-DD HH:mm:ss"
             value={eventEnd}
@@ -155,14 +175,14 @@ class EditEventModal extends Component {
             multiline={true}
             rows={5}
             label="Event description"
-            onChange={(e) => this.changeHandler(e)}
+            onChange={this.changeHandler}
             id="event_desc"
             value={eventDesc}
           />
         </div>
       </div>
     );
-  }
+  };
 
   renderAddModal = () => {
     const { classes, addModal } = this.props;
@@ -188,7 +208,7 @@ class EditEventModal extends Component {
         </div>
       </Modal>
     );
-  }
+  };
 
   renderEditModal = () => {
     const { classes, editModal } = this.props;
@@ -214,7 +234,7 @@ class EditEventModal extends Component {
         </div>
       </Modal>
     );
-  }
+  };
 
   renderContent = () => {
     const { editModal, addModal } = this.props;
@@ -223,7 +243,7 @@ class EditEventModal extends Component {
     } else if (addModal) {
       return this.renderAddModal();
     }
-  }
+  };
 
   render() {
     return (
@@ -232,17 +252,6 @@ class EditEventModal extends Component {
       </Fragment>
     );
   }
-}
-
-EditEventModal.propTypes = {
-  toggleModal: PropTypes.func.isRequired,
-  editModal: PropTypes.bool.isRequired,
-  addModal: PropTypes.bool.isRequired,
-  addEvent: PropTypes.func.isRequired,
-  getEvents: PropTypes.func.isRequired,
-  deleteEvent: PropTypes.func.isRequired,
-  monthTimeSpan: PropTypes.object.isRequired,
-  selectedEvent: PropTypes.object.isRequired,
 }
 
 export default withStyles(editEventModalStyles)(EditEventModal);

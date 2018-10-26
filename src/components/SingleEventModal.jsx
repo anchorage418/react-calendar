@@ -6,13 +6,23 @@ import { withStyles } from '@material-ui/core/styles';
 import singleEventModalStyles from '../styles/singleEventModal';
 
 class SingleEventModal extends Component {
+  static propTypes = {
+    open: PropTypes.bool.isRequired,
+    toggleModal: PropTypes.func.isRequired,
+    selectEvent: PropTypes.func,
+    deleteEvent: PropTypes.func.isRequired,
+    selectedEvent: PropTypes.object.isRequired,
+    monthTimeSpan: PropTypes.object.isRequired,
+    getEvents: PropTypes.func.isRequired,
+  };
+
   closeHandler = () => {
     const { toggleModal } = this.props;
     const settings = {
       singleEvent: false,
     };
     toggleModal(settings);
-  }
+  };
 
   editEventHandler = () => {
     const { toggleModal } = this.props;
@@ -20,14 +30,14 @@ class SingleEventModal extends Component {
       editEvent: true,
     };
     toggleModal(settings);
-  }
+  };
 
   deleteEventHandler = () => {
     const { selectedEvent, deleteEvent, monthTimeSpan, getEvents } = this.props;
     deleteEvent(selectedEvent);
     getEvents(monthTimeSpan);
     this.closeHandler();
-  }
+  };
 
   render() {
     const { open, classes, selectedEvent: { event_title, event_desc } } = this.props;
@@ -52,16 +62,6 @@ class SingleEventModal extends Component {
       </Modal>
     );
   }
-}
-
-SingleEventModal.propTypes = {
-  open: PropTypes.bool.isRequired,
-  toggleModal: PropTypes.func.isRequired,
-  selectEvent: PropTypes.func,
-  deleteEvent: PropTypes.func.isRequired,
-  selectedEvent: PropTypes.object.isRequired,
-  monthTimeSpan: PropTypes.object.isRequired,
-  getEvents: PropTypes.func.isRequired,
 }
 
 export default withStyles(singleEventModalStyles)(SingleEventModal);

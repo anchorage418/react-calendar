@@ -5,6 +5,8 @@ import { Provider } from 'react-redux';
 import logger from 'redux-logger'
 import * as serviceWorker from './serviceWorker';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import MomentUtils from 'material-ui-pickers/utils/moment-utils';
 import theme from './styles/theme';
 import rootReducer from './reducers'
 import App from './containers/App';
@@ -18,7 +20,9 @@ ReactDOM.render(
   <Fragment>
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
-        <App />
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <App />
+        </MuiPickersUtilsProvider>
       </MuiThemeProvider>
     </Provider>
   </Fragment>,

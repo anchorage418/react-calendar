@@ -76,9 +76,16 @@ class TotalEventsDayModal extends Component {
           <div className={classes.modal__body}>
             {this.renderEventItem()}
           </div>
-          <div>
-            <Button color="primary" onClick={() => addEventHandler()}>
+          <div className={classes.modal__btn_wrapper}>
+            <Button 
+              color="primary" 
+              variant="contained"
+              onClick={() => addEventHandler()}
+            >
               Add event
+            </Button>
+            <Button onClick={this.closeHandler}>
+              Cancel
             </Button>
           </div>
         </div>

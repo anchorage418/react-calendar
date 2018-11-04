@@ -3,10 +3,17 @@ import PropTypes from 'prop-types';
 import Modal from './Modal';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import DateTimePicker from 'material-ui-pickers/DateTimePicker';
+import { 
+  KeyboardArrowLeft, 
+  KeyboardArrowRight,
+  DateRange,
+  AccessTime, 
+} from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import { trim } from 'lodash';
-import editEventModalStyles from '../styles/totalEventsModal';
+import editEventModalStyles from '../styles/editEventModal';
 
 const FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
@@ -81,12 +88,16 @@ class EditEventModal extends Component {
       this.setState({ eventTitle: elValue });
     } else if (elId === 'event_desc') {
       this.setState({ eventDesc: elValue });
-    } else if (elId === 'event_start') {
-      this.setState({ eventStart: elValue });
-    } else if (elId === 'event_end') {
-      this.setState({ eventEnd: elValue });
-    }
+    } 
   };
+
+  startDatePickerHandler = (date) => {
+    this.setState({ eventStart: date });
+  }
+
+  endDatePickerHandler = (date) => {
+    this.setState({ eventEnd: date });
+  }
 
   validate = () => {
     // TODO: adjust validation
@@ -150,24 +161,53 @@ class EditEventModal extends Component {
             onChange={this.changeHandler}
             id="event_title"
             value={eventTitle}
+            fullWidth
           />
         </div>
         <div>
-          <TextField 
+          <DateTimePicker
             label="Event start"
-            onChange={this.changeHandler}
-            id="event_start"
-            placeholder="YYYY-MM-DD HH:mm:ss"
+            invalidLabel="YYYY-MM-DD HH:mm:ss"
             value={eventStart}
+            onChange={this.startDatePickerHandler}
+            format={FORMAT}
+            clearable
+            fullWidth
+            dateRangeIcon={
+              <DateRange />
+            }
+            timeIcon={
+              <AccessTime />
+            }
+            leftArrowIcon={
+              <KeyboardArrowLeft />
+            }
+            rightArrowIcon={
+              <KeyboardArrowRight />
+            }
           />
         </div>
         <div>
-          <TextField 
+          <DateTimePicker
             label="Event end"
-            onChange={this.changeHandler}
-            id="event_end"
-            placeholder="YYYY-MM-DD HH:mm:ss"
+            invalidLabel="YYYY-MM-DD HH:mm:ss"
             value={eventEnd}
+            onChange={this.endDatePickerHandler}
+            format={FORMAT}
+            clearable
+            fullWidth
+            dateRangeIcon={
+              <DateRange />
+            }
+            timeIcon={
+              <AccessTime />
+            }
+            leftArrowIcon={
+              <KeyboardArrowLeft />
+            }
+            rightArrowIcon={
+              <KeyboardArrowRight />
+            }
           />
         </div>
         <div>
@@ -178,6 +218,7 @@ class EditEventModal extends Component {
             onChange={this.changeHandler}
             id="event_desc"
             value={eventDesc}
+            fullWidth
           />
         </div>
       </div>
@@ -193,12 +234,18 @@ class EditEventModal extends Component {
           closeCallback={this.closeAddModalHandler}
         >
         <div className={classes.modal__content}>
-          <h2>Add New Event</h2>
+          <h2 className={classes.modal__title}>
+            Add New Event
+          </h2>
           <div className={classes.modal__body}>
             {this.renderForm()}
           </div>
-          <div>
-            <Button onClick={this.validate}>
+          <div className={classes.modal__btn_wrapper}>
+            <Button 
+              color="primary"
+              variant="contained"
+              onClick={this.validate}
+            >
               Add event
             </Button>
             <Button onClick={this.closeAddModalHandler}>
@@ -215,16 +262,22 @@ class EditEventModal extends Component {
 
     return (
       <Modal
-          open={editModal}
-          closeCallback={this.closeEditModalHandler}
-        >
+        open={editModal}
+        closeCallback={this.closeEditModalHandler}
+      >
         <div className={classes.modal__content}>
-          <h2>Edit Event</h2>
+          <h2 className={classes.modal__title}>
+            Edit Event
+          </h2>
           <div className={classes.modal__body}>
             {this.renderForm()}
           </div>
-          <div>
-            <Button onClick={this.validate}>
+          <div className={classes.modal__btn_wrapper}>
+            <Button 
+              color="primary"
+              variant="contained"
+              onClick={this.validate}
+            >
               Edit event
             </Button>
             <Button onClick={this.closeEditModalHandler}>

@@ -9,6 +9,10 @@ export default () => ({
   modal__body: {
     padding: '0 20px 20px',
   },
+  modal__btn_wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
   event_item: {
     padding: '10px',
     border: '1px solid #303f9f',

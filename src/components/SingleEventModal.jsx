@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import Modal from './Modal';
 import Button from '@material-ui/core/Button';
+import { Edit, Delete } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import singleEventModalStyles from '../styles/singleEventModal';
+
+const FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 class SingleEventModal extends Component {
   static propTypes = {
@@ -40,7 +44,13 @@ class SingleEventModal extends Component {
   };
 
   render() {
-    const { open, classes, selectedEvent: { event_title, event_desc } } = this.props;
+    const {
+      open, 
+      classes, 
+      selectedEvent: { event_title, event_desc, event_start, event_end } 
+    } = this.props;
+    const formatedStartDate = moment(event_start).format(FORMAT);
+    const formatedEndDate = moment(event_end).format(FORMAT);
 
     return (
       <Modal
@@ -48,16 +58,31 @@ class SingleEventModal extends Component {
         closeCallback={this.closeHandler}
       >
         <div className={classes.modal__content}>
-          <h2>{event_title}</h2>
+          <h2 className={classes.modal__title}>
+            {event_title}
+          </h2>
           <div className={classes.modal__body}>
-            {event_desc}
+            <div className={classes.dates_range}>
+              {formatedStartDate} - {formatedEndDate}
+            </div>
+            <div className={classes.event_description}>
+              {event_desc}
+            </div>
           </div>
-          <Button onClick={this.editEventHandler}>
-            Edit
-          </Button>
-          <Button onClick={this.deleteEventHandler}>
-            Delete
-          </Button>
+          <div className={classes.modal__btn_wrapper}>
+            <Button 
+              variant="contained"
+              color="primary"
+              onClick={this.editEventHandler}
+            >
+              Edit
+              <Edit />
+            </Button>
+            <Button onClick={this.deleteEventHandler}>
+              Delete
+              <Delete />
+            </Button>
+          </div>
         </div>
       </Modal>
     );

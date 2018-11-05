@@ -2,10 +2,8 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { map, isEmpty, isEqual } from 'lodash';
-import { Button, Icon } from '@material-ui/core';
-// import NavigateBefore from '@material-ui/icons/NavigateBefore';
-// import NavigateNext from '@material-ui/icons/NavigateNext';
-// import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
+import { Button } from '@material-ui/core';
+import { NavigateBefore, NavigateNext, AddCircle } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import calendarStyles from '../styles/calendar';
 
@@ -131,11 +129,11 @@ class Calendar extends Component {
         <div>
           <Button onClick={this.prevHandler} variant="contained" color="primary">
             Prev
-            {/* <Icon>AccessAlarmIcon</Icon> */}
+            <NavigateBefore />
           </Button>
           <Button onClick={this.nextHandler} variant="contained" color="primary">
             Next
-            {/* <Icon>AccessAlarmIcon</Icon> */}
+            <NavigateNext />
           </Button>
         </div>
         <ul className={classes.week_day__list}>
@@ -216,20 +214,31 @@ class Calendar extends Component {
     const currenDayClass = step === 0 && !disabled && currentDay === date ? classes.current_day : '';
     const disabledDayClass = disabled ? classes.disabled_day : '';
     const pastDayClass = step === 0 && !disabled && date < currentDay ? classes.past_day : '';
+    const isActiveClass = !disabledDayClass && !pastDayClass ? classes.isActive_day : '';
 
-    const cellClasses = `${classes.cell} ${currenDayClass} ${disabledDayClass} ${pastDayClass}`;
+    const cellClasses = `${classes.cell} ${isActiveClass} ${currenDayClass} ${disabledDayClass} ${pastDayClass}`;
 
     return (
       <div className={cellClasses} key={itemKey}>
         {day}
-        {!disabled && events && events[date] &&
-          <div 
-            className={classes.events_tooltip} 
-            onClick={() => this.eventTooltipHandler(date)}
-          >
-            <span className={classes.tooltip__value}>
-              {events[date].length}
-            </span>
+        {isActiveClass &&
+          <div className={classes.cell__overlay}>
+            {events && events[date] &&
+              <div 
+                className={`${classes.events_counter_tooltip} events_counter`}
+                onClick={() => this.eventTooltipHandler(date)}
+              >
+                {events[date].length}
+              </div>
+            }
+            {events && !events[date] &&
+              <AddCircle 
+                fontSize="large"
+                className="cell__add_btn"
+                classes={{ root: classes.cell__add_btn }}
+                onClick={() => this.addEvents(date)}
+              />
+            }
           </div>
         }
       </div>

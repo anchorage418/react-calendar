@@ -39,11 +39,13 @@ class EditEventModal extends Component {
   componentDidUpdate(prevProps) {
     const { 
       editModal,
+      addModal,
+      dayToAddEvents,
       selectedEvent: { 
         event_title, 
         event_desc, 
         event_start, 
-        event_end
+        event_end,
       },
     } = this.props;
     
@@ -54,13 +56,25 @@ class EditEventModal extends Component {
         eventStart: event_start,
         eventEnd: event_end,
       });
-    } else if (prevProps.editModal !== editModal && !editModal) {
-      this.setState({
-        eventTitle: '',
-        eventDesc: '',
-        eventStart: '',
-        eventEnd: '',
-      });
+    } else if (prevProps.addModal !== addModal && addModal) {
+      if (prevProps.dayToAddEvents !== dayToAddEvents && !dayToAddEvents) {
+        this.setState({
+          eventTitle: '',
+          eventDesc: '',
+          eventStart: '',
+          eventEnd: '',
+        });
+      } else {
+        console.log('3');
+        const dayToAddEventsStart = moment(dayToAddEvents).startOf('day');
+        const dayToAddEventsEnd = moment(dayToAddEvents).endOf('day');
+        this.setState({
+          eventTitle: '',
+          eventDesc: '',
+          eventStart: dayToAddEventsStart,
+          eventEnd: dayToAddEventsEnd,
+        });
+      }
     }
   }
 
@@ -299,6 +313,7 @@ class EditEventModal extends Component {
   };
 
   render() {
+    console.log('this.state', this.state);
     return (
       <Fragment>
         {this.renderContent()}

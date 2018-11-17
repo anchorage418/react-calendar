@@ -206,8 +206,10 @@ class Calendar extends Component {
 
   renderCalendarCell = (date, disabled = false) => {
     const { step } = this.state; 
-    const { classes, events } = this.props;
+    const { classes, events, addEventHandler } = this.props;
     const { currentDay } = this.dates;
+    const fullDate = (moment().date(date)).format('YYYY-MM-DD');
+
     const day = disabled ? '' : date;
     const itemKey = disabled ? `disabled_cell__${date}` : `cell__${date}`;
 
@@ -236,7 +238,7 @@ class Calendar extends Component {
                 fontSize="large"
                 className="cell__add_btn"
                 classes={{ root: classes.cell__add_btn }}
-                onClick={() => this.addEvents(date)}
+                onClick={() => addEventHandler(fullDate)}
               />
             }
           </div>

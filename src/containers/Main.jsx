@@ -23,15 +23,26 @@ class Main extends Component {
     modalState: PropTypes.object,
   };
 
-  addEventHandler = () => {
+  state = {
+    dayToAddEvents: null,
+  }
+
+  addEventHandler = (day) => {
     const { toggleModal } = this.props;
     const settings = {
       addEvent: true,
     };
+    
+    if (day) {
+      this.setState({ dayToAddEvents: day });
+    } else {
+      this.setState({ dayToAddEvents: null });
+    }
     toggleModal(settings);
   };
   
   render() {
+    const { dayToAddEvents } = this.state;
     const {
       classes,
       getEvents,
@@ -45,7 +56,7 @@ class Main extends Component {
       selectedEvent,
       addEvent,
       monthTimeSpan,
-          } = this.props;
+    } = this.props;
     
     return (
       <Fragment>
@@ -61,9 +72,10 @@ class Main extends Component {
               toggleModal={toggleModal}
               selectDay={selectDay}
               selectedDay={selectedDay}
+              addEventHandler={this.addEventHandler}
             />
             <div>
-              <Button color="primary" onClick={this.addEventHandler}>
+              <Button color="primary" onClick={() => this.addEventHandler()}>
                 Add event
               </Button>
             </div>
@@ -98,6 +110,7 @@ class Main extends Component {
           deleteEvent={deleteEvent}
           monthTimeSpan={monthTimeSpan}
           selectedEvent={selectedEvent}
+          dayToAddEvents={dayToAddEvents}
         />}
       </Fragment>
     );

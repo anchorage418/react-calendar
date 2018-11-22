@@ -70,8 +70,9 @@ class EditEventModal extends Component {
           eventEnd: '',
         });
       } else {
-        const dayToAddEventsStart = moment(dayToAddEvents).startOf('day');
-        const dayToAddEventsEnd = moment(dayToAddEvents).endOf('day');
+        const dayToAddEventsStart = moment(dayToAddEvents).startOf('day').format(FORMAT);
+        console.log('dayToAddEventsStart', dayToAddEventsStart);
+        const dayToAddEventsEnd = moment(dayToAddEvents).endOf('day').format(FORMAT);
         this.setState({
           eventTitle: '',
           eventDesc: '',

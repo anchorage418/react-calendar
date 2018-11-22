@@ -34,6 +34,11 @@ class EditEventModal extends Component {
     eventDesc: '',
     eventStart: '',
     eventEnd: '',
+    eventStartInvalid: false,
+    eventEndInvalid: false,
+    eventStartIsLater: false,
+    eventTitleInvalid: false,
+    eventDescInvalid: false,
   };
 
   componentDidUpdate(prevProps) {
@@ -65,7 +70,6 @@ class EditEventModal extends Component {
           eventEnd: '',
         });
       } else {
-        console.log('3');
         const dayToAddEventsStart = moment(dayToAddEvents).startOf('day');
         const dayToAddEventsEnd = moment(dayToAddEvents).endOf('day');
         this.setState({
@@ -114,7 +118,6 @@ class EditEventModal extends Component {
   }
 
   validate = () => {
-    // TODO: adjust validation
     const {
       editModal,
       addEvent,
@@ -123,29 +126,56 @@ class EditEventModal extends Component {
       addModal,
       getEvents,
       selectedEvent,
-      selectedEvent: {
-        event_title,
-        event_desc
-      }
     } = this.props;
-    const { eventTitle, eventDesc, eventStart, eventEnd } = this.state;
+    const { 
+      eventTitle, 
+      eventDesc, 
+      eventStart, 
+      eventEnd, 
+    } = this.state;
 
     const eventStartMoment = moment(eventStart, FORMAT, true);
     const eventEndMoment = moment(eventEnd, FORMAT, true);
-    const validEventTitle = addEvent ? trim(eventTitle).length > 0 : trim(eventTitle).length > 0 && event_title !== eventTitle;
-    const validEventDesc = addEvent ? trim(eventDesc).length > 0 : trim(eventDesc).length > 0 && event_desc !== eventDesc;
+    const validEventTitle = trim(eventTitle).length > 0;
+    const validEventDesc = trim(eventDesc).length > 0;
 
-    if (eventStartMoment.isValid() 
-    && eventEndMoment.isValid() 
-    && validEventTitle 
-    && validEventDesc
-    && eventEndMoment.isSameOrAfter(eventStartMoment)) {
+    let valid = true;
+    if (!eventStartMoment.isValid()) {
+      valid = false;
+      this.setState({ eventStartInvalid: true });
+    }
+    if (!eventEndMoment.isValid()) {
+      valid = false;
+      this.setState({ eventEndInvalid: true });
+    }
+    if (!eventEndMoment.isSameOrAfter(eventStartMoment)) {
+      valid = false;
+      this.setState({ eventStartIsLater: true });
+    }
+    if (!validEventTitle) {
+      valid = false;
+      this.setState({ eventTitleInvalid: true });
+    }
+    if (!validEventDesc) {
+      valid = false;
+      this.setState({ eventDescInvalid: true });
+    }
+    
+
+    if (valid) {
       const newEvent = {
         event_title: eventTitle,
         event_desc: eventDesc,
         event_start: eventStart,
         event_end: eventEnd,
       };
+      this.setState({
+        eventStartInvalid: false,
+        eventEndInvalid: false,
+        eventStartIsLater: false,
+        eventTitleInvalid: false,
+        eventDescInvalid: false,
+      });
       if (addModal) {
         addEvent(newEvent);
         getEvents(monthTimeSpan);
@@ -164,7 +194,12 @@ class EditEventModal extends Component {
       eventTitle,
       eventDesc,
       eventStart, 
-      eventEnd, 
+      eventEnd,
+      eventStartInvalid,
+      eventEndInvalid,
+      eventStartIsLater,
+      eventTitleInvalid,
+      eventDescInvalid,
     } = this.state;
 
     return (
@@ -176,6 +211,7 @@ class EditEventModal extends Component {
             id="event_title"
             value={eventTitle}
             fullWidth
+            error={eventTitleInvalid}
           />
         </div>
         <div>
@@ -233,6 +269,7 @@ class EditEventModal extends Component {
             id="event_desc"
             value={eventDesc}
             fullWidth
+            error={eventDescInvalid}
           />
         </div>
       </div>
@@ -313,7 +350,6 @@ class EditEventModal extends Component {
   };
 
   render() {
-    console.log('this.state', this.state);
     return (
       <Fragment>
         {this.renderContent()}

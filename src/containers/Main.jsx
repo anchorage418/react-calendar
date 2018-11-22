@@ -134,6 +134,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(actions.getEvents(monthPeriod));
     },
     addEvent: (event) => {
+      console.log('event', event);
       dispatch(actions.addEvent(event));
     },
     deleteEvent: (event) => {

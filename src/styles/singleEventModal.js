@@ -1,7 +1,10 @@
-export default () => ({
+export default (theme) => ({
   modal__content: {
     width: '400px',
     padding: '10px',
+    [theme.breakpoints.down('601')]: {
+      width: '100%',
+    },
   },
   modal__title: {
     textAlign: 'center',

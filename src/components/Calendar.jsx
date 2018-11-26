@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { map, isEmpty, isEqual } from 'lodash';
 import { Button } from '@material-ui/core';
-import { NavigateBefore, NavigateNext, AddCircle } from '@material-ui/icons';
+import { NavigateBefore, NavigateNext, AddCircle, Event } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import calendarStyles from '../styles/calendar';
 
@@ -122,16 +122,27 @@ class Calendar extends Component {
     return (
       <Fragment>
         <div>
-          <h1>
+          <h1 className={classes.calendar_header__title}>
             {`${formatedMonth} ${currentYear}`}
           </h1>
         </div>
-        <div>
-          <Button onClick={this.prevHandler} variant="contained" color="primary">
-            Prev
+        <div className={classes.action_btn_container}>
+          <Button 
+            onClick={this.prevHandler} 
+            variant="contained" 
+            color="primary"
+            fullWidth
+          >
             <NavigateBefore />
+            Prev
           </Button>
-          <Button onClick={this.nextHandler} variant="contained" color="primary">
+          <Button 
+            style={{marginLeft: '15px'}} 
+            onClick={this.nextHandler} 
+            variant="contained" 
+            color="primary"
+            fullWidth
+          >
             Next
             <NavigateNext />
           </Button>
@@ -231,6 +242,7 @@ class Calendar extends Component {
                 onClick={() => this.eventTooltipHandler(date)}
               >
                 {events[date].length}
+                <Event fontSize="small" />
               </div>
             }
             {events && !events[date] &&

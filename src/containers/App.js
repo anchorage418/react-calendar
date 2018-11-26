@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { CssBaseline, Typography } from '@material-ui/core';
 import Main from './Main';
 
 class App extends Component {
@@ -7,7 +7,9 @@ class App extends Component {
     return (
       <Fragment>
         <CssBaseline />
-        <Main />
+        <Typography>
+          <Main />
+        </Typography>
       </Fragment>
     );
   }

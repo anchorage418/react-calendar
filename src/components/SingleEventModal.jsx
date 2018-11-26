@@ -78,7 +78,13 @@ class SingleEventModal extends Component {
               Edit
               <Edit />
             </Button>
-            <Button onClick={this.deleteEventHandler}>
+            <Button onClick={this.closeHandler}>
+              Cancel
+            </Button>
+            <Button 
+              variant="contained"
+              onClick={this.deleteEventHandler}
+            >
               Delete
               <Delete />
             </Button>

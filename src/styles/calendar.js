@@ -1,4 +1,4 @@
-export default () => ({
+export default (theme) => ({
   calendar__root: {
 
   },
@@ -6,7 +6,11 @@ export default () => ({
 
   },
   calendar_body: {
-    // width: '500px',
+    marginBottom: '18px',
+  },
+  calendar_header__title: {
+    margin: '10px 0',
+    textAlign: 'center',
   },
   cell: {
     position: 'relative',
@@ -18,12 +22,12 @@ export default () => ({
     '&:first-child': {
       borderLeft: '1px solid rgba(128, 128, 128, 0.21)',
     },
-    // fontWeight: 'bold',
     fontSize: '30px',
-    // '&:hover': {
-    //   backgroundColor: '#3f51b5',
-    //   color: '#fff',
-    // },
+    [theme.breakpoints.down('sm')]: {
+      height: '80px',
+      padding: '0 6px',
+      fontSize: '22px',
+    },
   },
   isActive_day: {
     '&:hover': {
@@ -58,26 +62,11 @@ export default () => ({
     width: '100%',
     height: '40px',
     fontSize: '24px',
+    [theme.breakpoints.down('sm')]: {
+      height: '30px',
+      fontSize: '20px',
+    },
   },
-  // events_tooltip: {
-  //   position: 'absolute',
-  //   bottom: 0,
-  //   right: 0,
-  //   display: 'flex',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   width: '0',
-  //   height: '0',
-  //   borderBottom: '70px solid #303f9f',
-  //   borderLeft: '70px solid transparent',
-  //   cursor: 'pointer',
-  // },
-  // tooltip__value: {
-  //   position: 'relative',
-  //   top: '49px',
-  //   right: '25px',
-  //   color: '#fff',
-  // },
   cell__overlay: {
     position: 'absolute',
     top: 0,
@@ -100,15 +89,29 @@ export default () => ({
     cursor: 'pointer',
   },
   events_counter_tooltip: {
+    position: 'absolute',
+    bottom: '2px',
+    left: 0,
+    right: 0,
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
-    width: '36px',
+    width: '95%',
     height: '36px',
+    margin: '0 auto',
+    padding: '4px 0',
     backgroundColor: '#3f51b5',
     color: '#fff',
-    borderRadius: '50%',
+    borderRadius: '6px',
     fontSize: '24px',
     cursor: 'pointer',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '20px',
+    },
+  },
+  action_btn_container: {
+    maxWidth: '600px',
+    margin: '0 auto',
+    display: 'flex',
+    justifyContent: 'center',
   },
 });

@@ -2,8 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
+import { Button, Paper } from '@material-ui/core';
 import Calendar from '../components/Calendar';
 import TotalEventsDayModal from '../components/TotalEventsDayModal';
 import SingleEventModal from '../components/SingleEventModal';
@@ -75,7 +74,7 @@ class Main extends Component {
               addEventHandler={this.addEventHandler}
             />
             <div>
-              <Button color="primary" onClick={() => this.addEventHandler()}>
+              <Button variant="contained" color="primary" onClick={() => this.addEventHandler()}>
                 Add event
               </Button>
             </div>
@@ -100,7 +99,7 @@ class Main extends Component {
           monthTimeSpan={monthTimeSpan}
           getEvents={getEvents}
         />}
-        {
+        {modalState && (modalState.addEvent || modalState.editEvent) &&
         <EditEventModal 
           toggleModal={toggleModal}
           editModal={modalState.editEvent}

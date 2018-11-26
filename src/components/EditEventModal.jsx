@@ -196,9 +196,9 @@ class EditEventModal extends Component {
       eventDesc,
       eventStart, 
       eventEnd,
-      eventStartInvalid,
-      eventEndInvalid,
-      eventStartIsLater,
+      // eventStartInvalid,
+      // eventEndInvalid,
+      // eventStartIsLater,
       eventTitleInvalid,
       eventDescInvalid,
     } = this.state;

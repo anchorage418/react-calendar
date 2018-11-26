@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import logger from 'redux-logger'
+// import logger from 'redux-logger'
 import * as serviceWorker from './serviceWorker';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
@@ -11,9 +11,16 @@ import theme from './styles/theme';
 import rootReducer from './reducers'
 import App from './containers/App';
 
+const middlewares = [];
+
+if (process.env.NODE_ENV === 'development') {
+  const { logger } = require('redux-logger');
+  middlewares.push(logger);
+}
+
 const store = createStore(
   rootReducer,
-  applyMiddleware(logger)
+  applyMiddleware(...middlewares)
 );
 
 ReactDOM.render(
